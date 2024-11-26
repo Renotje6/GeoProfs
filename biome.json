@@ -28,7 +28,8 @@
 				"recommended": true
 			},
 			"style": {
-				"recommended": true
+				"recommended": true,
+				"useImportType": "off"
 			},
 			"performance": {
 				"recommended": true
