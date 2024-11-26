@@ -50,7 +50,7 @@
 			"quoteStyle": "double"
 		},
 		"parser": {
-      		"unsafeParameterDecoratorsEnabled": true
-    	}
+			"unsafeParameterDecoratorsEnabled": true
+		}
 	}
 }
