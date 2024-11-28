@@ -5,11 +5,12 @@ import { AppService } from "./app.service";
 import DataSourceModule from "./datasource/datasource.module";
 
 @Module({
-	imports: [ConfigModule.forRoot({
-		isGlobal: true,
-	}),
-	DataSourceModule,
-],
+	imports: [
+		ConfigModule.forRoot({
+			isGlobal: true,
+		}),
+		DataSourceModule,
+	],
 	controllers: [AppController],
 	providers: [AppService],
 })
