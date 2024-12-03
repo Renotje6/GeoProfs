@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, NotImplementedException, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, NotImplementedException, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { userInfo } from 'os';
 
 @Controller('auth')
 export class AuthController {
@@ -12,8 +13,9 @@ export class AuthController {
     }
 
     @UseGuards (AuthGuard)
+    // this endpoint in protected by AuthGuard
     @Get('me')
-    GetUserInfo(){
-        throw new NotImplementedException();
+    GetUserInfo(@Request() request){
+        return request.user
     }
 }
