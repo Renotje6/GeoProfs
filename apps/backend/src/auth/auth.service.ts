@@ -23,22 +23,20 @@ export class AuthService {
 	// 	return this.signIn(user);
 	// }
 
-	// async validateUser(input: AuthInput): Promise<SignInData | null> {
-	// 	const user = await this.usersService.findByEmail(input.email);
-	// 	const password = await bcrypt.hash(input.password, 10);
+	async validateUser(input: AuthInput): Promise<SignInData | null> {
+		const user = await this.usersService.findByEmail(input.email);
 
-	// 	if (user && user.password === password) {
-	// 		return {
-	// 			userId: user.id,
-	// 			email: user.email,
-	// 		};
-	// 	}
-	// 	return null;
-	// }
+		if (await bcrypt.compare(input.password, user.password)) {
+			return {
+				email: user.email,
+				password: user.password,
+			};
+		}
+		return null;
+	}
 
 	async signIn(user: SignInData): Promise<AuthResult> {
 		const userDb = await this.usersService.findByEmail(user.email);
-
 		if (!userDb) {
 			throw new UnauthorizedException();
 		}
