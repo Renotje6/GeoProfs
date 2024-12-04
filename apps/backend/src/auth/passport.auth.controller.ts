@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { PassportLocalGuard } from "./guards/passport-local.guard";
+import { PassportJwtAuthGuard } from "./guards/passport-jwt.guard";
 
 
 @Controller("auth-v2")
@@ -24,7 +25,8 @@ export class PassportAuthController {
   }
 
   @Get("me")
-  GetUserInfo() {
-    throw new UnauthorizedException();
+  @UseGuards(PassportJwtAuthGuard)
+  GetUserInfo(@Request() request) {
+    return request.user
   }
 }
