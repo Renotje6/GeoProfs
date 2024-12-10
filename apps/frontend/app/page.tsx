@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from './logo/crown.png';
-import CustomLink from './compontenten/CustomLink';
+import CustomLink from '../components/CustomLink';
 export default function Home() {
 	return (
 		<>
