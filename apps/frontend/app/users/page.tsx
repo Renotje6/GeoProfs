@@ -1,13 +1,10 @@
-import Image from 'next/image';
-// import logo from "../logo/crown.png"
-import Link from 'next/link';
-// import noti from "../image/Button.png"
-// import avatar from "../image/Avatar.png"
-import logotwee from '../image/crown.png';
 import CustomLink from '../../components/CustomLink';
-import plus from '../image/startContent.png';
 import DashHeader from '../../components/DashHeader';
 import DashFooter from '../../components/DashFooter';
+import plus from '@/public/image/startContent.png';
+import Image from 'next/image';
+import Link from 'next/link';
+
 export default function User() {
 	const links = [
 		{ href: '/users', label: 'HOME' },
