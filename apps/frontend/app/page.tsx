@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from './logo/crown.png';
-import CustomLink from '../components/CustomLink';
+import logo from '@/public/image/crown.png';
+import CustomLink from '@/components/CustomLink';
+
 export default function Home() {
 	return (
 		<>
