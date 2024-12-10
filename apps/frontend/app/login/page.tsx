@@ -1,8 +1,9 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import logo from '../logo/crown.png';
+import logo from '@/public/image/crown.png';
 
 export default function Login() {
 	const [isClient, setIsClient] = useState(false);
@@ -53,10 +54,11 @@ export default function Login() {
 								type={showPassword ? 'text' : 'password'} // Pas type aan op basis van showPassword
 								placeholder='Wachtwoord'
 							/>
+							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 							<span
 								className='absolute right-3 top-4 cursor-pointer w-5 h-5 rounded-xl' // Positie van het oog-icoon
 								onClick={togglePasswordVisibility} // Toggle functie bij klikken
-							></span>
+							/>
 						</div>
 						<input
 							className='btn font-medium bg-button rounded-xl py-3 text-white cursor-pointer'

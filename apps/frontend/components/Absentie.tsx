@@ -1,7 +1,6 @@
-import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import plus from '../image/startContent.png';
+import plus from '@/public/image/startContent.png';
 
 const Absentie: React.FC = () => {
 	return (
@@ -16,7 +15,7 @@ const Absentie: React.FC = () => {
 								type='text'
 								placeholder='Zoeken'
 							/>
-							<span className='span_zoken block w-4 h-4 rounded-full absolute top-[8] left-[5]'></span>
+							<span className='span_zoken block w-4 h-4 rounded-full absolute top-[8] left-[5]' />
 						</div>
 						<div className='p-1 bg-button rounded-[12] '>
 							<Link href='/verlof'>
