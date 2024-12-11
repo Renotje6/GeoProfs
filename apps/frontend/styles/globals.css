@@ -31,7 +31,7 @@ body{
 .hero{
   background-color: var(--hero);
   transform: rotate(-2deg);
-  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.1); /* Lichte schaduw aan alle kanten */
+  box-shadow: inset 4px 0px 0px 0px rgba(0, 0, 0, 0.1); /* Lichte schaduw aan alle kanten */
   transition: box-shadow 0.3s ease;
 }
 .inlog_logo{
