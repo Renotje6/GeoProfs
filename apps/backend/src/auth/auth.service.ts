@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { UsersService } from "src/users/users.service";
 
 type AuthInput = { email: string; password: string };
 type SignInData = { email: string; password: string };
@@ -9,46 +9,43 @@ type AuthResult = { accessToken: string; userId: string; email: string };
 
 @Injectable()
 export class AuthService {
-	constructor(
-		private usersService: UsersService,
-		private jwtService: JwtService
-	) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+  ) {}
 
-	// async authenticate(input: AuthInput): Promise<AuthResult> {
-	// 	const user = await this.validateUser(input);
-	// 	if (!user) {
-	// 		throw new UnauthorizedException();
-	// 	}
+  async validateUser(input: AuthInput): Promise<SignInData | null> {
+    const user = await this.usersService.findByEmail(input.email);
 
-	// 	return this.signIn(user);
-	// }
+    if (await bcrypt.compare(input.password, user.password)) {
+      return {
+        email: user.email,
+        password: user.password,
+      };
+    }
+    return null;
+  }
 
-	async validateUser(input: AuthInput): Promise<SignInData | null> {
-		const user = await this.usersService.findByEmail(input.email);
+  async signIn(user: SignInData): Promise<AuthResult> {
+    const userDb = await this.usersService.findByEmail(user.email);
+    if (!userDb) {
+      throw new UnauthorizedException();
+    }
 
-		if (await bcrypt.compare(input.password, user.password)) {
-			return {
-				email: user.email,
-				password: user.password,
-			};
-		}
-		return null;
-	}
+    const isPasswordValid = await bcrypt.compare(
+      user.password,
+      userDb.password
+    );
 
-	async signIn(user: SignInData): Promise<AuthResult> {
-		const userDb = await this.usersService.findByEmail(user.email);
-		if (!userDb) {
-			throw new UnauthorizedException();
-		}
+    if (!isPasswordValid) {
+      throw new UnauthorizedException();
+    }
 
-		const isPasswordValid = await bcrypt.compare(user.password, userDb.password);
+    const accessToken = await this.jwtService.signAsync({
+      userId: userDb.id,
+      email: userDb.email,
+    });
 
-		if (!isPasswordValid) {
-			throw new UnauthorizedException();
-		}
-
-		const accessToken = await this.jwtService.signAsync({ userId: userDb.id, email: userDb.email });
-
-		return { accessToken, email: user.email, userId: userDb.id };
-	}
+    return { accessToken, email: user.email, userId: userDb.id };
+  }
 }
