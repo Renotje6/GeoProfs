@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 
-export type User = any;
 
 @Injectable()
 export class UsersService {
@@ -17,7 +16,7 @@ export class UsersService {
 		},
 	];
 
-	async findUserByName(username: string): Promise<User | undefined> {
+	async findUserByName(username: string): Promise<any | undefined> {
 		return this.users.find((user) => user.username === username);
 	}
 }
