@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { UsersService } from "src/users/users.service";
 
 type AuthInput = { email: string; password: string };
 type SignInData = { email: string; password: string };
@@ -11,7 +11,7 @@ type AuthResult = { accessToken: string; userId: string; email: string };
 export class AuthService {
 	constructor(
 		private usersService: UsersService,
-		private jwtService: JwtService
+		private jwtService: JwtService,
 	) {}
 
 	// async authenticate(input: AuthInput): Promise<AuthResult> {
@@ -47,7 +47,10 @@ export class AuthService {
 			throw new UnauthorizedException();
 		}
 
-		const accessToken = await this.jwtService.signAsync({ userId: userDb.id, email: userDb.email });
+		const accessToken = await this.jwtService.signAsync({
+			userId: userDb.id,
+			email: userDb.email,
+		});
 
 		return { accessToken, email: user.email, userId: userDb.id };
 	}

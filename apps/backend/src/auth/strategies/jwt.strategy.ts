@@ -5,15 +5,15 @@ import { JWT_SECRET } from "../configs/jwt-secret";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
-      ignoreExpiration: false,
-      secretOrKey: JWT_SECRET, 
-    });
-  }
+	constructor() {
+		super({
+			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+			ignoreExpiration: false,
+			secretOrKey: JWT_SECRET,
+		});
+	}
 
-  async validate(payload: { sub: string; username: string }) {
-    return { userId: payload.sub, username: payload.username };
-  }
+	async validate(payload: { sub: string; username: string }) {
+		return { userId: payload.sub, username: payload.username };
+	}
 }
