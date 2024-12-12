@@ -5,13 +5,13 @@ import DataSourceModule from "./datasource/datasource.module";
 import { UsersModule } from "./users/users.module";
 
 @Module({
-  imports: [
-    UsersModule,
-    AuthModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    DataSourceModule,
-  ],
+	imports: [
+		UsersModule,
+		AuthModule,
+		ConfigModule.forRoot({
+			isGlobal: true,
+		}),
+		DataSourceModule,
+	],
 })
 export class AppModule {}
