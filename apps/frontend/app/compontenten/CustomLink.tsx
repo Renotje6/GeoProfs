@@ -1,7 +1,7 @@
 // components/CustomLink.tsx
 
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 type CustomLinkProps = {
   href: string;
@@ -11,9 +11,19 @@ type CustomLinkProps = {
   className?: string;
 };
 
-const CustomLink: React.FC<CustomLinkProps> = ({ href, text, height, width, className }) => {
+const CustomLink: React.FC<CustomLinkProps> = ({
+  href,
+  text,
+  height,
+  width,
+  className,
+}) => {
   return (
-    <Link href={href} className={`inline-block text-center bg-button text-white rounded-xl btn ${className}`} style={{ height, width, display: 'inline-block', lineHeight: height }}>
+    <Link
+      href={href}
+      className={`inline-block text-center bg-button text-white rounded-xl btn ${className}`}
+      style={{ height, width, display: "inline-block", lineHeight: height }}
+    >
       {text}
     </Link>
   );

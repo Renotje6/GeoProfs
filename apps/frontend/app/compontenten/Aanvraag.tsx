@@ -6,7 +6,6 @@ const Aanvraag: React.FC = () => {
   return (
     <>
       <div className="aanvraag_row w-full rounded-md p-3">
-
         <div className="aanvraagzoeken w-full flex justify-between items-center">
           <h2 className="font-bold text-[#545454]">AANVRAGEN</h2>
           <div className="zoeken_row flex justify-between items-center gap-2">
@@ -44,7 +43,6 @@ const Aanvraag: React.FC = () => {
             <p className="rotate-0 text-pcolor text-center flex-1">ACTIES</p>
           </div>
 
-
           <div className="aanvraag_ithems w-full flex justify-between items-center mt-2 border border-[#A1A1A1] rounded-md">
             <p className="rotate-0 text-pcolor text-center flex-1">vakantie</p>
             <p className="rotate-0 text-pcolor text-center flex-1">27-11-24</p>
@@ -205,11 +203,9 @@ const Aanvraag: React.FC = () => {
             </p>
             <p className="rotate-0 text-pcolor text-center flex-1">ACTIES</p>
           </div>
-          
 
           {/* Eind Row */}
         </div>
-
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import plus from "../image/startContent.png"
+import plus from "../image/startContent.png";
 
 const Gebruikers: React.FC = () => {
   return (
@@ -36,8 +36,12 @@ const Gebruikers: React.FC = () => {
         <div className="rows h-[70vh] w-full overflow-auto">
           {/* row */}
           <div className="aanvraag_ithems w-full flex justify-between items-center mt-2 border border-[#A1A1A1] rounded-md">
-            <p className="rotate-0 text-pcolor text-center flex-1">Hussein Omar</p>
-            <p className="rotate-0 text-pcolor text-center flex-1">husein@gmail.com</p>
+            <p className="rotate-0 text-pcolor text-center flex-1">
+              Hussein Omar
+            </p>
+            <p className="rotate-0 text-pcolor text-center flex-1">
+              husein@gmail.com
+            </p>
             <p className="rotate-0 text-pcolor text-center flex-1">
               0682322425
             </p>
