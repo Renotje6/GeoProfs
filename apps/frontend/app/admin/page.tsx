@@ -1,49 +1,47 @@
 'use client';
-import DashHeader from '@/components/DashHeader';
-import DashFooter from '@/components/DashFooter';
-import Sidebar from '@/components/Sidebar';
-import Aanvraag from '@/components/Aanvraag';
-import Absentie from '@/components/Absentie';
-import Gebruikers from '@/components/Gebruikers';
-import { useState } from 'react';
 
-export default function Admin() {
-	const links = [
-		{ href: '/admin', label: 'Home' },
-		{ href: '/admin', label: 'DASHBOARD' },
+import { Button } from '@nextui-org/react';
+
+export default function AdminPage() {
+	const sections = [
+		{
+			key: 'aanvragen',
+			label: 'AANVRAGEN',
+			content: <div>content</div>,
+		},
+		{
+			key: 'absentie',
+			label: 'ABSENTIE',
+			content: <div>content</div>,
+		},
+		{
+			key: 'gebruikers',
+			label: 'GEBRUIKERS',
+			content: <div>content</div>,
+		},
 	];
-	const [activeSection, setActiveSection] = useState<string>('aanvraag');
-	const renderSection = () => {
-		switch (activeSection) {
-			case 'aanvraag':
-				return <Aanvraag />;
-			case 'absentie':
-				return <Absentie />;
-			case 'gebruikers':
-				return <Gebruikers />;
-			default:
-				return <Aanvraag />;
-		}
-	};
+
 	return (
-		<>
-			{/* Admin Header  */}
-			<DashHeader links={links} />
-			{/* Eind Admin Header */}
-
-			{/* Admin content */}
-			<div className='inneradmin w-full flex justify-center items-center'>
-				<div className='inner_dash w-11/12 flex gap-2'>
-					<Sidebar setActiveSection={setActiveSection} />
-
-					<div className='w-4/5'>{renderSection()}</div>
-				</div>
+		<div className='flex gap-10 w-full xl:w-[80%] justify-between'>
+			<div className='bg w-96 hidden 2xl:flex items-center flex-col lg:p-4 p-2 lg:gap-4 gap-2 grow-0 bg-black/5 rounded-xl'>
+				<h2 className='text-xl font-medium'>SECTIONS</h2>
+				{sections.map((section) => (
+					<Button
+						key={section.key}
+						size='sm'
+						className='w-full'
+						onClick={() => {}}>
+						{section.label}
+					</Button>
+				))}
 			</div>
-			{/* Eind Admin content */}
-
-			{/* Admin Footer */}
-			<DashFooter Links={links} />
-			{/* Eind Admin Footer */}
-		</>
+			<div className='flex flex-col h-full w-full gap-5 md:gap-10 bg-black/5 rounded-xl p-2 lg:p-4 '>
+				{sections.map((section) => (
+					<section
+						key={section.key}
+						id={section.key}></section>
+				))}
+			</div>
+		</div>
 	);
 }
