@@ -1,45 +1,52 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
 import { UsersService } from "src/users/users.service";
 
-type AuthInput = { username: string; password: string };
-type SignInData = { userId: number; username: string };
-type AuthResult = { accessToken: string; UserId: number; username: string };
+type AuthInput = { email: string; password: string };
+type SignInData = { email: string; password: string };
+type AuthResult = { accessToken: string; userId: string; email: string };
 
 @Injectable()
 export class AuthService {
+
 	constructor(
 		private usersService: UsersService,
 		private jwtService: JwtService,
 	) {}
 
-	async authenticate(input: AuthInput): Promise<AuthResult> {
-		const user = await this.validateUser(input);
-		if (!user) {
-			throw new UnauthorizedException();
-		}
+  async validateUser(input: AuthInput): Promise<SignInData | null> {
+    const user = await this.usersService.findByEmail(input.email);
 
-		return this.signIn(user);
-	}
+    if (await bcrypt.compare(input.password, user.password)) {
+      return {
+        email: user.email,
+        password: user.password,
+      };
+    }
+    return null;
+  }
 
-	async validateUser(input: AuthInput): Promise<SignInData | null> {
-		const user = await this.usersService.findUserByName(input.username);
-		if (user && user.password === input.password) {
-			return {
-				userId: user.userId,
-				username: user.username,
-			};
-		}
-		return null;
-	}
+  async signIn(user: SignInData): Promise<AuthResult> {
+    const userDb = await this.usersService.findByEmail(user.email);
+    if (!userDb) {
+      throw new UnauthorizedException();
+    }
 
-	async signIn(user: SignInData): Promise<AuthResult> {
-		const tokenPayload = {
-			sub: user.userId,
-			username: user.username,
-		};
-		const accessToken = await this.jwtService.signAsync(tokenPayload);
+    const isPasswordValid = await bcrypt.compare(
+      user.password,
+      userDb.password
+    );
 
-		return { accessToken, username: user.username, UserId: user.userId };
-	}
+    if (!isPasswordValid) {
+      throw new UnauthorizedException();
+    }
+
+    const accessToken = await this.jwtService.signAsync({
+      userId: userDb.id,
+      email: userDb.email,
+    });
+
+    return { accessToken, email: user.email, userId: userDb.id };
+  }
 }

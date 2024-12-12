@@ -2,8 +2,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../logo/crown.png";
-import noti from "../image/Button.png"
-import avatar from "../image/Avatar.png"
+import noti from "../image/Button.png";
+import avatar from "../image/Avatar.png";
 
 // Define the type for individual link objects
 interface LinkItem {
@@ -26,7 +26,9 @@ const Header: React.FC<HeaderProps> = ({ links }) => {
           <ul className="flex items-center">
             {links.map((link, index) => (
               <Link key={index} href={link.href}>
-                <li className={` ${index === 0 ? "text-pcolor" : " ml-7 list-disc text-pcolor"  }`}>
+                <li
+                  className={` ${index === 0 ? "text-pcolor" : " ml-7 list-disc text-pcolor"}`}
+                >
                   {link.label}
                 </li>
               </Link>

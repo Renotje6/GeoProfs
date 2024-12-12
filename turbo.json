@@ -23,6 +23,9 @@
 			"cache": false,
 			"persistent": true,
 			"inputs": ["$TURBO_DEFAULT$", ".env.development.local"]
+		},
+		"seed": {
+			"dependsOn": ["^seed"]
 		}
 	}
 }

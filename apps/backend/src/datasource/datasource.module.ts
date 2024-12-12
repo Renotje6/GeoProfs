@@ -21,7 +21,6 @@ import { DataSource } from "typeorm";
 						entities: [`${__dirname}/../entities/**/*.entity{.ts,.js}`],
 					});
 					await dataSource.initialize();
-					console.log("Database connection established");
 					return dataSource;
 				} catch (err) {
 					console.log("Database connection failed");
