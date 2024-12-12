@@ -3,6 +3,6 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Manager extends User {
-    @Column()
-    department: string;
+	@Column()
+	department: string;
 }
