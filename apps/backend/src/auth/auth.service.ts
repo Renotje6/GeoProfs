@@ -9,10 +9,11 @@ type AuthResult = { accessToken: string; userId: string; email: string };
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService
-  ) {}
+
+	constructor(
+		private usersService: UsersService,
+		private jwtService: JwtService,
+	) {}
 
   async validateUser(input: AuthInput): Promise<SignInData | null> {
     const user = await this.usersService.findByEmail(input.email);

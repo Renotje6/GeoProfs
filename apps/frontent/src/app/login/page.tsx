@@ -1,9 +1,8 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
-import Link from 'next/link';
+import Link from "next/link";
 import Image from "next/image";
 import logo from "../logo/crown.png";
-
 
 export default function Login() {
   const [isClient, setIsClient] = useState(false);
@@ -34,9 +33,15 @@ export default function Login() {
             </div>
             {/* <!-- Email / Gebruikersnaam Input --> */}
             <div className="email">
-              <input className="rounded-xl p-3" type="text" placeholder="Email / Gebruikersnaam" />
+              <input
+                className="rounded-xl p-3"
+                type="text"
+                placeholder="Email / Gebruikersnaam"
+              />
             </div>
-            <div className="wachtwoord relative"> {/* Toevoegen van relative position */}
+            <div className="wachtwoord relative">
+              {" "}
+              {/* Toevoegen van relative position */}
               <input
                 className="rounded-xl p-3 pr-10" // Voeg extra padding toe aan de rechterkant voor het icoon
                 type={showPassword ? "text" : "password"} // Pas type aan op basis van showPassword
@@ -45,11 +50,19 @@ export default function Login() {
               <span
                 className="absolute right-3 top-4 cursor-pointer w-5 h-5 rounded-xl" // Positie van het oog-icoon
                 onClick={togglePasswordVisibility} // Toggle functie bij klikken
-              >
-              </span>
+              ></span>
             </div>
-            <input className="btn font-medium bg-button rounded-xl py-3 text-white cursor-pointer" type="submit" value="LOGIN" />
-            <Link className="wachtwoprd_vergeten text-sm self-end text-customGray" href="/">Wachtwoord Vergeten?</Link>
+            <input
+              className="btn font-medium bg-button rounded-xl py-3 text-white cursor-pointer"
+              type="submit"
+              value="LOGIN"
+            />
+            <Link
+              className="wachtwoprd_vergeten text-sm self-end text-customGray"
+              href="/"
+            >
+              Wachtwoord Vergeten?
+            </Link>
           </form>
         </div>
 
@@ -62,4 +75,3 @@ export default function Login() {
     </>
   );
 }
-

@@ -22,7 +22,9 @@ const Footer: React.FC<DashFooter> = ({ Links }) => {
             <Link key={index} href={link.href}>
               <li
                 className={`${
-                  index === 0 ? "text-pcolor text-xs" : "ml-7 list-disc text-pcolor text-xs"
+                  index === 0
+                    ? "text-pcolor text-xs"
+                    : "ml-7 list-disc text-pcolor text-xs"
                 }`}
               >
                 {link.label}
