@@ -4,7 +4,9 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Manager extends User {
-	@OneToOne(() => Department, (department) => 
-	department.manager)
+	@OneToOne(
+		() => Department,
+		(department) => department.manager,
+	)
 	department: Department;
 }
