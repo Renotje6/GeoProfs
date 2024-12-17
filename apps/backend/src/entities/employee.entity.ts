@@ -4,7 +4,7 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Employee extends User {
-	@Column()
+	@Column({ default: 0 })
 	balance: number;
 
 	@ManyToOne(() => Department, {
