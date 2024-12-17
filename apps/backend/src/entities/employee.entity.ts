@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Department } from "./department.entity";
 import { User } from "./user.entity";
 
@@ -6,7 +6,13 @@ import { User } from "./user.entity";
 export class Employee extends User {
 	@Column()
 	balance: number;
-	
-	@OneToOne(() => Department)
+
+	@ManyToOne(() => Department, {
+		nullable: false,
+	})
+	@JoinColumn({ name: "department_id" })
 	department: Department;
+
+	@Column()
+	department_id: string;
 }
