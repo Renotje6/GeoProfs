@@ -23,7 +23,7 @@ export default function AdminPage() {
 
 	return (
 		<div className='flex gap-10 w-full xl:w-[80%] justify-between'>
-			<div className='bg w-96 hidden 2xl:flex items-center flex-col lg:p-4 p-2 lg:gap-4 gap-2 grow-0 bg-black/5 rounded-xl'>
+			<div className='bg w-96 hidden 2xl:flex items-center flex-col lg:p-4 p-2 gap-2 grow-0 bg-black/5 rounded-xl'>
 				<h2 className='text-xl font-medium'>SECTIONS</h2>
 				{sections.map((section) => (
 					<Button
@@ -39,7 +39,8 @@ export default function AdminPage() {
 				{sections.map((section) => (
 					<section
 						key={section.key}
-						id={section.key}></section>
+						id={section.key}
+					/>
 				))}
 			</div>
 		</div>

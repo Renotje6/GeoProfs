@@ -8,7 +8,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<div className='p-2 min-h-screen flex flex-col'>
-			<Header title='DASHBOARD' />
+			<Header
+				title='DASHBOARD'
+				hideNotifications={false}
+			/>
 			<main className='flex-grow flex items-center justify-center'>{children}</main>
 			<Footer />
 		</div>
