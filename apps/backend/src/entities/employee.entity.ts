@@ -10,9 +10,6 @@ export class Employee extends User {
 	@ManyToOne(() => Department, {
 		nullable: false,
 	})
-	@JoinColumn({ name: "department_id" })
+	@JoinColumn()
 	department: Department;
-
-	@Column()
-	department_id: string;
 }

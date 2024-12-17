@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Employee } from "./employee.entity";
 import { Manager } from "./manager.entity";
 
@@ -16,9 +16,10 @@ export class Department {
 	)
 	employees: Employee[];
 
-	@OneToMany(
+	@OneToOne(
 		() => Manager,
 		(manager) => manager.department,
 	)
-	managers: Manager[];
+	@JoinColumn()
+	manager: Manager;
 }
