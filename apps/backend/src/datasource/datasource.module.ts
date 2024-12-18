@@ -18,10 +18,9 @@ import { DataSource } from "typeorm";
 						password: configService.get<string>("DB_PASSWORD"),
 						database: configService.get<string>("DB_DATABASE"),
 						synchronize: true,
-						entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
+						entities: [`${__dirname}/../entities/**/*.entity{.ts,.js}`],
 					});
 					await dataSource.initialize();
-					console.log("Database connection established");
 					return dataSource;
 				} catch (err) {
 					console.log("Database connection failed");
