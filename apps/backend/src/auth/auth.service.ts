@@ -17,7 +17,7 @@ export class AuthService {
   async validateUser(input: AuthInput): Promise<SignInData | null> {
     const user = await this.usersService.findByEmail(input.email);
 
-    // Kijkt of het wachtwoord overeen komt met het gehashed wachtwoord
+    // Checks if the password matches the hashed password
     if (await bcrypt.compare(input.password, user.password)) {
       return {
         email: user.email,
@@ -28,9 +28,9 @@ export class AuthService {
   }
 
   async signIn(user: SignInData): Promise<AuthResult> {
-    // Vindt de gebruiker uit de database doormiddel van email
+    // Finds the user from the database using email
     const userDb = await this.usersService.findByEmail(user.email);
-    //Error wanneer de gebruiker niet is gevonden
+    // Throws an error if the user is not found
     if (!userDb) {
       throw new UnauthorizedException();
     }
@@ -40,17 +40,17 @@ export class AuthService {
       userDb.password
     );
 
-    // Error wanneer wachtwoord verkeerd is
+    // Throws an error if the password is incorrect
     if (!isPasswordValid) {
       throw new UnauthorizedException();
     }
 
-    // maakt een JWT access token voor de gebruiker
+    // Creates a JWT access token for the user
     const accessToken = await this.jwtService.signAsync({
       userId: userDb.id,
       email: userDb.email,
     });
-    // Geeft token en gebruikers informatie terug
+    // Returns the token and user information
     return { accessToken, email: user.email, userId: userDb.id };
   }
 }

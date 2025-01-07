@@ -8,7 +8,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle("Geoprofs API")
     .setDescription(
-      "De API voor het Geoprofs portaal, waarmee werknemers eenvoudig hun verlof en ziekte kunnen beheren. Managers en administrators kunnen via deze API verlofaanvragen goedkeuren en het ziekteverzuim monitoren."
+      "The API for the Geoprofs portal, allowing employees to easily manage their leave and illness. Managers and administrators can use this API to approve leave requests and monitor absenteeism."
     )
     .setVersion("1.0")
     .build();
