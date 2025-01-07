@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import { EmployeesService } from "src/employees/employees.service";
 import { UsersService } from "src/users/users.service";
 
 type AuthInput = { email: string; password: string };
@@ -9,13 +10,14 @@ type AuthResult = { accessToken: string; userId: string; email: string };
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService
-  ) {}
+	constructor(
+		private employeeService: EmployeesService,
+		private usersService: UsersService,
+		private jwtService: JwtService,
+	) {}
 
-  async validateUser(input: AuthInput): Promise<SignInData | null> {
-    const user = await this.usersService.findByEmail(input.email);
+	async validateUser(input: AuthInput): Promise<SignInData | null> {
+		const user = await this.employeeService.findByEmail(input.email);
 
     // Checks if the password matches the hashed password
     if (await bcrypt.compare(input.password, user.password)) {
@@ -27,13 +29,11 @@ export class AuthService {
     return null;
   }
 
-  async signIn(user: SignInData): Promise<AuthResult> {
-    // Finds the user from the database using email
-    const userDb = await this.usersService.findByEmail(user.email);
-    // Throws an error if the user is not found
-    if (!userDb) {
-      throw new UnauthorizedException();
-    }
+	async signIn(user: SignInData): Promise<AuthResult> {
+		const userDb = await this.employeeService.findByEmail(user.email);
+		if (!userDb) {
+			throw new UnauthorizedException();
+		}
 
     const isPasswordValid = await bcrypt.compare(
       user.password,
