@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import { EmployeesService } from "src/employees/employees.service";
 import { UsersService } from "src/users/users.service";
 
 type AuthInput = { email: string; password: string };
@@ -9,13 +10,14 @@ type AuthResult = { accessToken: string; userId: string; email: string };
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService
-  ) {}
+	constructor(
+		private employeeService: EmployeesService,
+		private usersService: UsersService,
+		private jwtService: JwtService,
+	) {}
 
-  async validateUser(input: AuthInput): Promise<SignInData | null> {
-    const user = await this.usersService.findByEmail(input.email);
+	async validateUser(input: AuthInput): Promise<SignInData | null> {
+		const user = await this.employeeService.findByEmail(input.email);
 
     // Kijkt of het wachtwoord overeen komt met het gehashed wachtwoord
     if (await bcrypt.compare(input.password, user.password)) {
@@ -27,13 +29,11 @@ export class AuthService {
     return null;
   }
 
-  async signIn(user: SignInData): Promise<AuthResult> {
-    // Vindt de gebruiker uit de database doormiddel van email
-    const userDb = await this.usersService.findByEmail(user.email);
-    //Error wanneer de gebruiker niet is gevonden
-    if (!userDb) {
-      throw new UnauthorizedException();
-    }
+	async signIn(user: SignInData): Promise<AuthResult> {
+		const userDb = await this.employeeService.findByEmail(user.email);
+		if (!userDb) {
+			throw new UnauthorizedException();
+		}
 
     const isPasswordValid = await bcrypt.compare(
       user.password,
