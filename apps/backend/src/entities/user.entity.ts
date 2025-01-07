@@ -1,26 +1,39 @@
 import * as bcrypt from "bcrypt";
-import { BeforeInsert, Column, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+export enum UserRole {
+  MANAGER = "MANAGER",
+  EMPLOYEE = "EMPLOYEE",
+}
+
+@Entity()
 export class User {
-	@PrimaryGeneratedColumn("uuid")
-	id: string;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-	@Column()
-	name: string;
+  @Column()
+  name: string;
 
-	@Column({
-		unique: true,
-	})
-	email: string;
+  @Column({
+    unique: true,
+  })
+  email: string;
 
-	@Column()
-	avatar: string;
+  @Column()
+  avatar: string;
 
-	@Column()
-	password: string;
+  @Column()
+  password: string;
 
-	@BeforeInsert()
-	async hashPassword() {
-		this.password = await bcrypt.hash(this.password, 10);
-	}
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.EMPLOYEE,
+  })
+  role: UserRole;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }
