@@ -1,4 +1,4 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Button, DropdownTrigger, Dropdown, DropdownMenu, DropdownItem, Chip, User, Pagination, type SortDescriptor } from '@nextui-org/react';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Button, Pagination, type SortDescriptor } from '@nextui-org/react';
 import React from 'react';
 
 const columns = [
@@ -14,19 +14,19 @@ const users = [
 	{
 		id: 1,
 		name: 'John Doe',
-		status: 'active',
+		status: 'approved',
 		date: new Date().toLocaleString(),
 	},
 	{
 		id: 2,
 		name: 'Jane Doe',
-		status: 'inactive',
+		status: 'rejected',
 		date: new Date().toLocaleString(),
 	},
 	{
 		id: 3,
 		name: 'John Smith',
-		status: 'active',
+		status: 'approved',
 		date: new Date().toLocaleString(),
 	},
 ];
