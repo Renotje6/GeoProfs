@@ -19,14 +19,15 @@ export class AuthService {
 	async validateUser(input: AuthInput): Promise<SignInData | null> {
 		const user = await this.employeeService.findByEmail(input.email);
 
-		if (await bcrypt.compare(input.password, user.password)) {
-			return {
-				email: user.email,
-				password: user.password,
-			};
-		}
-		return null;
-	}
+    // Checks if the password matches the hashed password
+    if (await bcrypt.compare(input.password, user.password)) {
+      return {
+        email: user.email,
+        password: user.password,
+      };
+    }
+    return null;
+  }
 
 	async signIn(user: SignInData): Promise<AuthResult> {
 		const userDb = await this.employeeService.findByEmail(user.email);
@@ -34,17 +35,22 @@ export class AuthService {
 			throw new UnauthorizedException();
 		}
 
-		const isPasswordValid = await bcrypt.compare(user.password, userDb.password);
+    const isPasswordValid = await bcrypt.compare(
+      user.password,
+      userDb.password
+    );
 
-		if (!isPasswordValid) {
-			throw new UnauthorizedException();
-		}
+    // Throws an error if the password is incorrect
+    if (!isPasswordValid) {
+      throw new UnauthorizedException();
+    }
 
-		const accessToken = await this.jwtService.signAsync({
-			userId: userDb.id,
-			email: userDb.email,
-		});
-
-		return { accessToken, email: user.email, userId: userDb.id };
-	}
+    // Creates a JWT access token for the user
+    const accessToken = await this.jwtService.signAsync({
+      userId: userDb.id,
+      email: userDb.email,
+    });
+    // Returns the token and user information
+    return { accessToken, email: user.email, userId: userDb.id };
+  }
 }
