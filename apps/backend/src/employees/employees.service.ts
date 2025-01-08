@@ -31,7 +31,7 @@ export class EmployeesService {
   findByEmail(email: string): Promise<Employee | null> {
     return this.employeesRepository
       .createQueryBuilder("employee")
-      .leftJoinAndSelect("employee.user", "user") // Join the `User` entity
+      .leftJoinAndSelect("employee.id", "user") // Join the `User` entity
       .leftJoinAndSelect("employee.department", "department") // Join the `Department` entity (if needed)
       .where("user.email = :email", { email }) // Filter by `User.email`
       .getOne(); // Get the single result

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
-import { User } from "./user.entity";
 
 @Injectable()
 export class UsersService {
@@ -19,18 +19,5 @@ export class UsersService {
 
   findByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({ where: { email } });
-  }
-
-  async insert(user: {
-    email: string;
-    password: string;
-    avatar: string;
-    name: string;
-  }): Promise<User> {
-    if (await this.findByEmail(user.email)) {
-      throw new Error("User already exists");
-    }
-
-    return this.usersRepository.save(this.usersRepository.create(user));
   }
 }
