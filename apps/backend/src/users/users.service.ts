@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
+import { Role } from "src/auth/enums/role.enum";
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,9 @@ export class UsersService {
 	}
 
 	findOne(id: string): Promise<User> {
-		return this.usersRepository.findOne({ where: { id } });
+		return this.usersRepository.findOne({ 
+			where: { id }
+		});
 	}
 
 	findByEmail(email: string): Promise<User> {
@@ -26,6 +29,7 @@ export class UsersService {
 		password: string;
 		avatar: string;
 		name: string;
+		role: Role;
 	}): Promise<User> {
 		if (await this.findByEmail(user.email)) {
 			throw new Error("User already exists");

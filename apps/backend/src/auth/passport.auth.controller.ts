@@ -10,8 +10,8 @@ import {
   } from "@nestjs/common";
   import { AuthGuard } from "@nestjs/passport";
   import { AuthService } from "./auth.service";
-  import { PassportJwtAuthGuard } from "./guards/passport-jwt.guard";
-  import { PassportLocalGuard } from "./guards/passport-local.guard";
+  import { PassportJwtAuthGuard } from "./guards/jwt-auth/passport-jwt.guard";
+  import { PassportLocalGuard } from "./guards/local.auth/passport-local.guard";
   import { ApiTags, ApiBody, ApiResponse, ApiOperation } from "@nestjs/swagger";
   import { LoginInput, AuthResult, UserInfo } from "./auth.dto";
   
