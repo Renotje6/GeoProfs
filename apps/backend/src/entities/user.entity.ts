@@ -1,12 +1,8 @@
 import * as bcrypt from "bcrypt";
 import { Role } from "src/auth/enums/role.enum";
-import { BeforeInsert, Column, PrimaryGeneratedColumn } from "typeorm";
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-export enum UserRole {
-  MANAGER = "MANAGER",
-  EMPLOYEE = "EMPLOYEE",
-}
+
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {

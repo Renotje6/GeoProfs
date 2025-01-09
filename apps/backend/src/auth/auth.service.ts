@@ -5,7 +5,6 @@ import { UsersService } from "src/users/users.service";
 
 type AuthInput = { email: string; password: string };
 type SignInData = { email: string; password: string };
-type AuthResult = { accessToken: string; userId: string; email: string };
 
 @Injectable()
 export class AuthService {
@@ -26,7 +25,7 @@ export class AuthService {
     return null;
   }
 
-  async signIn(user: SignInData): Promise<AuthResult> {
+  async signIn(user: SignInData) {
     const userDb = await this.usersService.findByEmail(user.email);
     if (!userDb) {
       throw new UnauthorizedException("User not found");
@@ -41,6 +40,6 @@ export class AuthService {
       email: userDb.email,
     });
 
-    return { accessToken, email: user.email, userId: userDb.id };
+    return { accessToken, email: user.email, userId: userDb.id, role: userDb.role};
   }
 }

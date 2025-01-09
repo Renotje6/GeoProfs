@@ -13,23 +13,4 @@ import { RolesGuard } from "src/auth/guards/roles/roles.guard";
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  @ApiBody({
-    description: "User creation data",
-    type: UserCreateInput,
-  })
-
-  create(
-    @Body()
-    createUserDto: {
-      email: string;
-      password: string;
-      avatar: string;
-      name: string;
-      role: Role;
-    }
-  ) {
-    return this.usersService.insert(createUserDto);
-  }
 }
