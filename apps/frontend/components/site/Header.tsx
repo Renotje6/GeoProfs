@@ -10,11 +10,12 @@ import Link from 'next/link';
 interface HeaderProps {
 	title: string;
 	endContent?: React.ReactNode;
+	hideLinks?: boolean;
 	hideAvatar?: boolean;
 	hideNotifications?: boolean;
 }
 
-const Header = ({ title, endContent, hideAvatar = false, hideNotifications = true }: HeaderProps) => {
+const Header = ({ title, endContent, hideAvatar = false, hideLinks = false, hideNotifications = true }: HeaderProps) => {
 	const routes = [
 		{
 			label: 'Dashboard',
@@ -42,22 +43,24 @@ const Header = ({ title, endContent, hideAvatar = false, hideNotifications = tru
 					/>
 				</div>
 				<p className='text-4xl font-semibold'>{title}</p>
-				<div className='pl-5'>
-					<ul className='flex text-lg'>
-						{routes.map((route, index) => (
-							<li key={route.label}>
-								<Link
-									className='uppercase font-medium hover:underline decoration-4 underline-offset-4'
-									href={route.href}>
-									{route.label}
-								</Link>
-								{index < routes.length - 1 && (
-									<span className='mx-2'>●</span> // Dot separator
-								)}
-							</li>
-						))}
-					</ul>
-				</div>
+				{!hideLinks && (
+					<div className='pl-5'>
+						<ul className='flex text-lg'>
+							{routes.map((route, index) => (
+								<li key={route.label}>
+									<Link
+										className='uppercase font-medium hover:underline decoration-4 underline-offset-4'
+										href={route.href}>
+										{route.label}
+									</Link>
+									{index < routes.length - 1 && (
+										<span className='mx-2'>●</span> // Dot separator
+									)}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
 			</div>
 
 			{/* End Content */}

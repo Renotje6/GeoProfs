@@ -1,24 +1,21 @@
 import LoginForm from '@/components/forms/login-form';
+import RequestForm from '@/components/forms/request-form';
+import Header from '@/components/site/Header';
 import Image from 'next/image';
 
 export default function LoginPage() {
 	return (
 		<div className='w-screen min-h-screen bg-black/5'>
 			<div className='w-screen min-h-screen flex transition-size duration-100'>
-				{/* XS Logo */}
-				<div className='md:hidden absolute top-4 left-4 flex gap-2 items-center animate-appearance-in'>
-					<div className='relative size-10'>
-						<Image
-							src='/image/crown.png'
-							alt='Logo'
-							fill
-						/>
-					</div>
-					<p className='text-xl font-medium'>GEOPROFS</p>
-				</div>
 				{/* Left Content */}
-				<div className='w-full shadow-xl flex justify-center items-center p-2 bg-white'>
-					<LoginForm />
+				<div className='w-full shadow-xl flex justify-center items-center p-2 bg-white flex-col'>
+					<Header
+						title='GEOPROFS'
+						hideLinks
+					/>
+					<div className='h-full w-full p-2 flex justify-center items-center'>
+						<RequestForm />
+					</div>
 				</div>
 				{/* Right Content */}
 				<div className='w-full justify-center items-center hidden md:flex p-2'>
