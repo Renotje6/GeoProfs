@@ -10,21 +10,21 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
 
 @Module({
-	controllers: [PassportAuthController],
-	providers: [AuthService, LocalStrategy, JwtStrategy],
-	imports: [
-		EmployeesModule,
-		UsersModule,
-		JwtModule.registerAsync({
-			imports: [ConfigModule],
-			useFactory: async (configService: ConfigService) => ({
-				global: true,
-				secret: configService.get<string>("JWT_SECRET"),
-				signOptions: { expiresIn: "1d" },
-			}),
-			inject: [ConfigService],
-		}),
-		PassportModule,
-	],
+  controllers: [PassportAuthController],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
+  imports: [
+    EmployeesModule,
+    UsersModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get<string>("JWT_SECRET"),
+        signOptions: { expiresIn: "1d" },
+      }),
+      inject: [ConfigService],
+    }),
+    PassportModule,
+  ],
 })
 export class AuthModule {}
