@@ -1,11 +1,9 @@
 import * as bcrypt from "bcrypt";
+import { Role } from "src/auth/enums/role.enum";
+
+
 import { BeforeInsert, Column, Entity } from "typeorm";
 import { BaseEntity } from "./base.entity";
-
-export enum UserRole {
-  MANAGER = "MANAGER",
-  EMPLOYEE = "EMPLOYEE",
-}
 
 @Entity()
 export class User extends BaseEntity {
@@ -20,15 +18,15 @@ export class User extends BaseEntity {
   @Column()
   avatar: string;
 
-  @Column()
-  password: string;
+	@Column()
+	password: string;
 
-  @Column({
-    type: "enum",
-    enum: UserRole,
-    default: UserRole.EMPLOYEE,
-  })
-  role: UserRole;
+	@Column({
+		type: 'enum',
+		enum: Role,
+		default: Role.employee
+	})
+	role:Role
 
   @BeforeInsert()
   async hashPassword() {

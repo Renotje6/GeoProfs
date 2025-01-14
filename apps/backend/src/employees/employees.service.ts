@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Role } from "src/auth/enums/role.enum";
 import { Department } from "src/entities/department.entity";
 import { Employee } from "src/entities/employee.entity";
-import { User, UserRole } from "src/entities/user.entity";
+import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -57,7 +58,7 @@ export class EmployeesService {
     }
 
     const newUser = await this.userRepository.save(
-      this.userRepository.create({ ...employee, role: UserRole.EMPLOYEE }),
+      this.userRepository.create({ ...employee, role: Role.employee }),
     );
 
     return this.employeesRepository.save(
