@@ -1,7 +1,7 @@
 import React from "react";
 import { Meta, StoryFn } from "@storybook/react"; // Gebruik Meta en StoryFn
 import CustomLink from "../app/compontenten/CustomLink";
-
+import './tailconfig.css'
 
 export default {
   title: "Components/CustomLink",
