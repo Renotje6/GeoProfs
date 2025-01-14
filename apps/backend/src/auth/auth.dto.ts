@@ -17,8 +17,7 @@ export class LoginInput {
 export class AuthResult {
   @ApiProperty({
     example: "jwt-token-string",
-    description:
-      "The JWT access token that you must use for secured routes",
+    description: "The JWT access token that you must use for secured routes",
   })
   accessToken: string;
 

@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity } from "typeorm";
+import { BaseEntity } from "./base.entity";
 
 export enum UserRole {
   MANAGER = "MANAGER",
@@ -7,10 +8,7 @@ export enum UserRole {
 }
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class User extends BaseEntity {
   @Column()
   name: string;
 

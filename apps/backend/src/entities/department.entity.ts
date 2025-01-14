@@ -1,18 +1,10 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, OneToMany, OneToOne } from "typeorm";
+import { BaseEntity } from "./base.entity";
 import { Employee } from "./employee.entity";
 import { Manager } from "./manager.entity";
 
 @Entity()
-export class Department {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class Department extends BaseEntity {
   @Column()
   name: string;
 
