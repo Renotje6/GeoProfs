@@ -1,11 +1,10 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
-import { UsersService } from "./users.service";
-import { ApiTags, ApiBody } from "@nestjs/swagger";
-import { UserCreateInput, UserResult } from "./user.dto";
-import { Role } from "src/auth/enums/role.enum";
+import { Controller, UseGuards } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
+import { Role } from "src/auth/enums/role.enum";
 import { PassportJwtAuthGuard } from "src/auth/guards/jwt-auth/passport-jwt.guard";
 import { RolesGuard } from "src/auth/guards/roles/roles.guard";
+import { UsersService } from "./users.service";
 @ApiTags("users")
 @Roles(Role.employee) // role employee for the whole user
 @UseGuards(RolesGuard) // roleguard runs recond
