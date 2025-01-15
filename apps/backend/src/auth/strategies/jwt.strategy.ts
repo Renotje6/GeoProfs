@@ -6,17 +6,17 @@ import { Role } from "../enums/role.enum";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: configService.get<string>("JWT_SECRET"),
-    });
-  }
+	constructor(configService: ConfigService) {
+		super({
+			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+			ignoreExpiration: false,
+			secretOrKey: configService.get<string>("JWT_SECRET"),
+		});
+	}
 
-  async validate(payload: { sub: string; username: string }) {
-    const userId = payload.sub;
+	async validate(payload: { sub: string; username: string }) {
+		const userId = payload.sub;
 
-    return { userId: payload.sub, username: payload.username};
-  }
+		return { userId: payload.sub, username: payload.username };
+	}
 }

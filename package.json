@@ -5,6 +5,7 @@
 		"build": "turbo build",
 		"dev": "turbo dev",
 		"dev:backend": "turbo backend#dev",
+		"dev:frontend": "turbo frontend#dev",
 		"lint": "turbo lint",
 		"seed": "turbo seed",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\""

@@ -11,5 +11,5 @@ import { UsersService } from "./users.service";
 @UseGuards(PassportJwtAuthGuard) // authguard runs first
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+	constructor(private readonly usersService: UsersService) {}
 }

@@ -8,38 +8,43 @@ type SignInData = { email: string; password: string };
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
-  ) {}
+	constructor(
+		private usersService: UsersService,
+		private jwtService: JwtService,
+	) {}
 
-  async validateUser(input: AuthInput): Promise<SignInData | null> {
-    const user = await this.usersService.findByEmail(input.email);
+	async validateUser(input: AuthInput): Promise<SignInData | null> {
+		const user = await this.usersService.findByEmail(input.email);
 
-    if (await bcrypt.compare(input.password, user.password)) {
-      return {
-        email: user.email,
-        password: user.password,
-      };
-    }
-    return null;
-  }
+		if (await bcrypt.compare(input.password, user.password)) {
+			return {
+				email: user.email,
+				password: user.password,
+			};
+		}
+		return null;
+	}
 
-  async signIn(user: SignInData) {
-    const userDb = await this.usersService.findByEmail(user.email);
-    if (!userDb) {
-      throw new UnauthorizedException("User not found");
-    }
+	async signIn(user: SignInData) {
+		const userDb = await this.usersService.findByEmail(user.email);
+		if (!userDb) {
+			throw new UnauthorizedException("User not found");
+		}
 
-    if (!(await bcrypt.compare(user.password, userDb.password))) {
-      throw new UnauthorizedException("Invalid password");
-    }
+		if (!(await bcrypt.compare(user.password, userDb.password))) {
+			throw new UnauthorizedException("Invalid password");
+		}
 
-    const accessToken = await this.jwtService.signAsync({
-      userId: userDb.id,
-      email: userDb.email,
-    });
+		const accessToken = await this.jwtService.signAsync({
+			userId: userDb.id,
+			email: userDb.email,
+		});
 
-    return { accessToken, email: user.email, userId: userDb.id, role: userDb.role};
-  }
+		return {
+			accessToken,
+			email: user.email,
+			userId: userDb.id,
+			role: userDb.role,
+		};
+	}
 }
