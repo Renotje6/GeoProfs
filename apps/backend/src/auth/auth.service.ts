@@ -40,11 +40,6 @@ export class AuthService {
 			email: userDb.email,
 		});
 
-		return {
-			accessToken,
-			email: user.email,
-			userId: userDb.id,
-			role: userDb.role,
-		};
-	}
+    return { accessToken, name: userDb.name, userId: userDb.id, role: userDb.role};
+  }
 }
