@@ -28,10 +28,10 @@ export class AuthResult {
 	userId: string;
 
 	@ApiProperty({
-		example: "user@example.com",
-		description: "The email address of the logged-in user",
+		example: "John Doe",
+		description: "The name of the logged-in user",
 	})
-	email: string;
+	name: string;
 }
 
 export class UserInfo {
