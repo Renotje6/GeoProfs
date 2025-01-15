@@ -8,65 +8,65 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class EmployeesService {
-  constructor(
-    @InjectRepository(Employee)
-    private employeesRepository: Repository<Employee>,
-    @InjectRepository(Department)
-    private departmentRepository: Repository<Department>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-  ) {}
+	constructor(
+		@InjectRepository(Employee)
+		private employeesRepository: Repository<Employee>,
+		@InjectRepository(Department)
+		private departmentRepository: Repository<Department>,
+		@InjectRepository(User)
+		private userRepository: Repository<User>,
+	) {}
 
-  findAll(): Promise<Employee[]> {
-    return this.employeesRepository.find();
-  }
+	findAll(): Promise<Employee[]> {
+		return this.employeesRepository.find();
+	}
 
-  findOne(id: string): Promise<Employee> {
-    return this.employeesRepository.findOne({
-      where: {
-        id,
-      },
-    });
-  }
+	findOne(id: string): Promise<Employee> {
+		return this.employeesRepository.findOne({
+			where: {
+				id,
+			},
+		});
+	}
 
-  findByEmail(email: string): Promise<Employee | null> {
-    return this.employeesRepository
-      .createQueryBuilder("employee")
-      .leftJoinAndSelect("employee.id", "user") // Join the `User` entity
-      .leftJoinAndSelect("employee.department", "department") // Join the `Department` entity (if needed)
-      .where("user.email = :email", { email }) // Filter by `User.email`
-      .getOne(); // Get the single result
-  }
+	findByEmail(email: string): Promise<Employee | null> {
+		return this.employeesRepository
+			.createQueryBuilder("employee")
+			.leftJoinAndSelect("employee.id", "user") // Join the `User` entity
+			.leftJoinAndSelect("employee.department", "department") // Join the `Department` entity (if needed)
+			.where("user.email = :email", { email }) // Filter by `User.email`
+			.getOne(); // Get the single result
+	}
 
-  async insert(employee: {
-    email: string;
-    password: string;
-    avatar: string;
-    name: string;
-    departmentId: string;
-  }): Promise<Employee> {
-    if (await this.findByEmail(employee.email)) {
-      throw new Error("Employee already exists");
-    }
+	async insert(employee: {
+		email: string;
+		password: string;
+		avatar: string;
+		name: string;
+		departmentId: string;
+	}): Promise<Employee> {
+		if (await this.findByEmail(employee.email)) {
+			throw new Error("Employee already exists");
+		}
 
-    const department = await this.departmentRepository.findOne({
-      where: { id: employee.departmentId },
-    });
+		const department = await this.departmentRepository.findOne({
+			where: { id: employee.departmentId },
+		});
 
-    if (!department) {
-      throw new Error("Department not found");
-    }
+		if (!department) {
+			throw new Error("Department not found");
+		}
 
-    const newUser = await this.userRepository.save(
-      this.userRepository.create({ ...employee, role: Role.employee }),
-    );
+		const newUser = await this.userRepository.save(
+			this.userRepository.create({ ...employee, role: Role.employee }),
+		);
 
-    return this.employeesRepository.save(
-      this.employeesRepository.create({
-        id: newUser.id,
-        department,
-        balance: 0,
-      }),
-    );
-  }
+		return this.employeesRepository.save(
+			this.employeesRepository.create({
+				id: newUser.id,
+				department,
+				balance: 0,
+			}),
+		);
+	}
 }
