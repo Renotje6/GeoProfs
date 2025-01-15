@@ -53,7 +53,7 @@ export default class ManagerSeeder implements Seeder {
 			const newUser = await userRepository.save(userRepository.create(manager));
 			await managerRepository.save(
 				managerRepository.create({
-					id: newUser.id,
+					user: newUser,
 					department,
 				}),
 			);

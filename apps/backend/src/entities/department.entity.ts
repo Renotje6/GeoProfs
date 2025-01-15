@@ -5,8 +5,8 @@ import { Manager } from "./manager.entity";
 
 @Entity()
 export class Department extends BaseEntity {
-  @Column()
-  name: string;
+	@Column()
+	name: string;
 
 	@OneToMany(
 		() => Employee,

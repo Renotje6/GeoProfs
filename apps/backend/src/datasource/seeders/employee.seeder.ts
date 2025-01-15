@@ -48,7 +48,7 @@ export default class EmployeeSeeder implements Seeder {
 			const newUser = await userRepository.save(userRepository.create(employee));
 			await employeeRepository.save(
 				employeeRepository.create({
-					id: newUser.id,
+					user: newUser,
 					balance: faker.number.int({ min: 0, max: 200 }),
 					department,
 				}),

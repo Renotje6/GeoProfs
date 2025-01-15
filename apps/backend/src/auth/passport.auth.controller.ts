@@ -14,11 +14,11 @@ import { AuthResult, LoginInput, UserInfo } from "./auth.dto";
 import { AuthService } from "./auth.service";
 import { PassportJwtAuthGuard } from "./guards/jwt-auth/passport-jwt.guard";
 import { PassportLocalGuard } from "./guards/local.auth/passport-local.guard";
-  
-  // Swagger Tag for the Auth controller
-  @ApiTags("Auth")
-  @Controller("auth")
-  export class PassportAuthController {
+
+// Swagger Tag for the Auth controller
+@ApiTags("Auth")
+@Controller("auth")
+export class PassportAuthController {
 	constructor(private authService: AuthService) {}
 
 	@Post("login")

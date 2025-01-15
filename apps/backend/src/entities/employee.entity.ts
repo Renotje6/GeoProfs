@@ -5,9 +5,13 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Employee extends BaseEntity {
-  @OneToOne(() => User, (user) => user.id, { eager: true, cascade: true })
-  @JoinColumn()
-  userId: string;
+	@OneToOne(
+		() => User,
+		(user) => user.id,
+		{ eager: true, cascade: true },
+	)
+	@JoinColumn()
+	user: User;
 
 	@Column({ default: 0 })
 	balance: number;
@@ -15,6 +19,6 @@ export class Employee extends BaseEntity {
 	@ManyToOne(() => Department, {
 		nullable: false,
 	})
-	@JoinColumn({ name: "departmentId" })
+	@JoinColumn()
 	department: Department;
 }
