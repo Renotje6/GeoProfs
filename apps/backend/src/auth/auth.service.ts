@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { UsersService } from "src/users/users.service";
+import { UsersService } from "../users/users.service";
 
 type AuthInput = { email: string; password: string };
 type SignInData = { email: string; password: string };
