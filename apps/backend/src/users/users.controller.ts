@@ -6,7 +6,7 @@ import { PassportJwtAuthGuard } from "src/auth/guards/jwt-auth/passport-jwt.guar
 import { RolesGuard } from "src/auth/guards/roles/roles.guard";
 import { UsersService } from "./users.service";
 @ApiTags("users")
-@Roles(Role.employee) // role employee for the whole user
+@Roles(Role.Admin) // role employee for the whole user
 @UseGuards(RolesGuard) // roleguard runs recond
 @UseGuards(PassportJwtAuthGuard) // authguard runs first
 @Controller("users")
