@@ -12,7 +12,7 @@ export class SickReport extends BaseEntity {
     @JoinColumn()
     user: User;
 
-    @Column({type: "datetime"})
+    @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
     startDate: Date;
 
     @Column({ type: "datetime", nullable: true })

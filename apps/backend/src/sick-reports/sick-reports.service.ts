@@ -1,10 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSickReportDto } from './dto/create-sick-report.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { SickReport } from '../entities/sickReport.entity';
+import { User } from '../entities/user.entity';
 import { UpdateSickReportDto } from './dto/update-sick-report.dto';
 
 @Injectable()
 export class SickReportsService {
-  create(createSickReportDto: CreateSickReportDto) {
+  constructor(
+    @InjectRepository(SickReport) private sickReportRepository: Repository<SickReport>,
+  ) {}
+
+  create(user: User) {
+
+    
     return 'This action adds a new sickReport';
   }
 
