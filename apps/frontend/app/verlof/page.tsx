@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import logo from "../logo/crown.png";
-import arrow_left from "../image/arrow-left.png";
-import Avatar from "../image/Avatar.png";
+import logo from "../../public/image/crown.png";
+import arrow_left from "../../public/image/crown.png";
+import Avatar from "../../public/image/crown.png";
 export default function Verlof() {
   return (
     <div className="inlog_section w-full flex justify-center items-center h-screen">
