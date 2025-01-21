@@ -9,11 +9,10 @@ export default function RootLayout({
 	return (
 		<div className='p-2 min-h-screen flex flex-col'>
 			<Header
-				title='DASHBOARD'
+				title='HOME'
 				hideNotifications={false}
-				type='admin'
 			/>
-			<main className='min-h-screen flex items-center justify-center'>{children}</main>
+			<main className='min-h-screen flex justify-center'>{children}</main>
 			<Footer />
 		</div>
 	);
