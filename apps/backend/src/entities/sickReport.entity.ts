@@ -9,7 +9,7 @@ export class SickReport extends BaseEntity {
         (user) => user.id,
         { eager: true, cascade: true },
     )
-    @JoinColumn() // This will act as the primary key and foreign key
+    @JoinColumn()
     user: User;
 
     @Column({type: "datetime"})
