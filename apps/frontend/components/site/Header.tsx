@@ -25,10 +25,6 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 						href: '/dashboard',
 					},
 					{
-						label: 'Aanvragen',
-						href: '/requests',
-					},
-					{
 						label: 'Gebruikers',
 						href: '/users',
 					},
@@ -40,7 +36,7 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 					},
 					{
 						label: 'Aanvragen',
-						href: '/requests',
+						href: '/request',
 					},
 				];
 
