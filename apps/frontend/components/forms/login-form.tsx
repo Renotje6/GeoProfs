@@ -6,6 +6,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import { handleLogin } from '@/actions/auth';
 
 type FormFields = {
 	login: string;
@@ -32,14 +33,20 @@ const LoginForm = () => {
 			});
 			return await response.json();
 		},
-		onSuccess: (data) => {
+		onSuccess: async (data) => {
 			if (data.message !== 'Unauthorized') {
 				// Handle success, e.g., redirect or store token
 				console.log('Login successful:', data);
 				// store access token in session storage
-				sessionStorage.setItem('token', data.accessToken);
+				const response = await handleLogin(data.accessToken);
 				// Redirect or update the state
-				window.location.href = '/home';
+				if (response) window.location.href = '/home';
+				else {
+					// Set error message
+					setError('root', {
+						message: 'Failed to store token',
+					});
+				}
 			} else {
 				// Set error message
 				setError('root', {

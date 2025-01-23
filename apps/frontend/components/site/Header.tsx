@@ -40,7 +40,7 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 					},
 				];
 
-	const onLogout = () => {
+	const onLogout = async () => {
 		// delete the token from session storage
 		sessionStorage.removeItem('token');
 		// Redirect to login page
