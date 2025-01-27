@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, IsNull, Repository } from 'typeorm';
 import { Employee } from '../entities/employee.entity';
 import { Manager } from '../entities/manager.entity';
 import { SickReport } from '../entities/sickReport.entity';
@@ -8,55 +8,61 @@ import { User } from '../entities/user.entity';
 
 @Injectable()
 export class SickReportsService {
-  constructor(
-    @InjectRepository(SickReport) private sickReportRepository: Repository<SickReport>,
-    @InjectRepository(Manager) private managerRepository: Repository<Manager>,
-    @InjectRepository(Employee) private employeeRepository: Repository<Employee>,
-  ) {}
+	constructor(
+		@InjectRepository(SickReport) private sickReportRepository: Repository<SickReport>,
+		@InjectRepository(Manager) private managerRepository: Repository<Manager>,
+		@InjectRepository(Employee) private employeeRepository: Repository<Employee>
+	) {}
 
-  async create(user: User) {
-    return await this.sickReportRepository.save(this.sickReportRepository.create({
-      user,
-      startDate: new Date(),
-    }));
-  }
+	async create(user: User) {
+		const employee = await this.employeeRepository.createQueryBuilder().where('employee.userId = :employeeId', { employeeId: user.id }).getOne();
 
-  findAll() {
-   this.sickReportRepository.find();
-  }
+		if (!employee) {
+			throw new Error('Employee not found');
+		}
 
-  async findAllManager(user: User) {
-    const manager = await this.managerRepository.findOne({where:{user}});
-    const employees = await this.employeeRepository.find({where:{department: manager.department}});
+		return await this.sickReportRepository.save(
+			this.sickReportRepository.create({
+				employee,
+				startDate: new Date(),
+			})
+		);
+	}
 
-    // Get all current sick reports for the employees in the employees array
-    return this.sickReportRepository.find({where:{user: In(employees.map(employee => employee.user))}});
-  }
+	findAll() {
+		this.sickReportRepository.find();
+	}
 
-  async findMine(user: User) {
-    return this.sickReportRepository.createQueryBuilder("sick_report")
-    .where('sickReport.userId = :userId', {userId:user.id});
-  }
+	async findAllManager(user: User) {
+		const manager = await this.managerRepository.createQueryBuilder('manager').leftJoinAndSelect('manager.department', 'department').where('manager.userId = :managerId', { managerId: user.id }).getOne();
+		console.log(manager);
+		const employees = await this.employeeRepository.createQueryBuilder('employee').where('employee.departmentId = :departmentId', { departmentId: manager.department.id }).getMany();
+		// Get all current sick reports for the employees in the employees array
+		return await this.sickReportRepository.find({ where: { employee: In(employees.map((employee) => employee.id)), endDate: IsNull() } });
+	}
 
-  findOne(id: string) {
-    return this.sickReportRepository.findOne({where:{ id}});
-  }
+	async findMine(user: User) {
+		const employee = await this.employeeRepository.createQueryBuilder().where('employee.userId = :employeeId', { employeeId: user.id }).getOne();
 
-  update(id: string, updateSickReportDto: Partial<SickReport>) {
-    this.sickReportRepository.update(id, updateSickReportDto);
-  }
+		if (!employee) {
+			throw new Error('Employee not found');
+		}
 
-  remove(id: number) {
-    return `This action removes a #${id} sickReport`;
-  }
+		return this.sickReportRepository.createQueryBuilder('sickReport').where('sickReport.employeeId = :employeeId', { employeeId: employee.id }).getMany();
+	}
 
-  async userHasActiveSickReport(user: User) {
-    const sickReport = await
-    this.sickReportRepository.createQueryBuilder('sickReport')
-    .where('sickReport.userId = :userId', {userId:user.id})
-    .andWhere('sickReport.endDate IS NULL')
-    .getCount()
+	findOne(id: string) {
+		return this.sickReportRepository.findOne({ where: { id } });
+	}
 
-return sickReport > 0;
-}
+	update(id: string, updateSickReportDto: Partial<SickReport>) {
+		this.sickReportRepository.update(id, updateSickReportDto);
+	}
+
+	async userHasActiveSickReport(user: User) {
+		const employee = await this.employeeRepository.createQueryBuilder().where('employee.userId = :employeeId', { employeeId: user.id }).getOne();
+		const sickReport = await this.sickReportRepository.createQueryBuilder('sickReport').where('sickReport.employeeId = :employeeId', { employeeId: employee.id }).andWhere('sickReport.endDate IS NULL').getCount();
+
+		return sickReport > 0;
+	}
 }

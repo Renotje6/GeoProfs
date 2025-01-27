@@ -1,10 +1,10 @@
-import { faker } from "@faker-js/faker";
-import { DataSource } from "typeorm";
-import { Seeder } from "typeorm-extension";
-import { Role } from "../../auth/enums/role.enum";
-import { Department } from "../../entities/department.entity";
-import { Employee } from "../../entities/employee.entity";
-import { User } from "../../entities/user.entity";
+import { faker } from '@faker-js/faker';
+import { DataSource } from 'typeorm';
+import { Seeder } from 'typeorm-extension';
+import { Role } from '../../auth/enums/role.enum';
+import { Department } from '../../entities/department.entity';
+import { Employee } from '../../entities/employee.entity';
+import { User } from '../../entities/user.entity';
 
 export default class EmployeeSeeder implements Seeder {
 	public async run(dataSource: DataSource): Promise<any> {
@@ -13,10 +13,10 @@ export default class EmployeeSeeder implements Seeder {
 		const departmentRepository = dataSource.getRepository(Department);
 
 		const testEmployee = {
-			email: "employee@mail.com",
-			password: "password",
+			email: 'employee@mail.com',
+			password: 'password',
 			avatar: faker.image.avatar(),
-			name: "Test Employee",
+			name: 'Test Employee',
 			role: Role.employee,
 			department: null,
 		};
@@ -26,7 +26,7 @@ export default class EmployeeSeeder implements Seeder {
 
 		// Handle the case when no departments exist
 		if (departments.length === 0) {
-			throw new Error("No departments found in the database. Please add departments before seeding employees.");
+			throw new Error('No departments found in the database. Please add departments before seeding employees.');
 		}
 
 		const employees: {
@@ -35,9 +35,9 @@ export default class EmployeeSeeder implements Seeder {
 			avatar: string;
 			name: string;
 			department: Department;
-		}[] = Array.from({ length: 100 }, () => ({
+		}[] = Array.from({ length: 100 }, (_, index) => ({
 			name: faker.person.fullName(),
-			email: faker.internet.email(),
+			email: `${index}test@mail.com`,
 			avatar: faker.image.avatar(),
 			password: faker.internet.password(),
 			role: Role.employee,
@@ -47,8 +47,6 @@ export default class EmployeeSeeder implements Seeder {
 		// Add the test employee with a random department
 		testEmployee.department = departments[Math.floor(Math.random() * departments.length)];
 		employees.push(testEmployee);
-
-		console.log(testEmployee);
 
 		// Seed each employee
 		for (const employee of employees) {
@@ -63,7 +61,7 @@ export default class EmployeeSeeder implements Seeder {
 					updatedAt: faker.date.recent(),
 					balance: faker.number.int({ min: 0, max: 200 }),
 					department: employee.department,
-				}),
+				})
 			);
 		}
 	}
