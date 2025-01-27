@@ -2,10 +2,10 @@
 
 import { Button, DateRangePicker, Input, Select, SelectItem } from '@nextui-org/react';
 import { useForm } from 'react-hook-form';
-import Link from 'next/link';
 import React from 'react';
 
 type FormFields = {
+	category: 'ziekmelding' | 'verlof';
 	type: 'personal' | 'holiday';
 	startDate: string;
 	endDate: string;
@@ -17,6 +17,7 @@ const RequestForm = () => {
 		register,
 		handleSubmit,
 		setValue,
+		watch,
 		formState: { errors },
 	} = useForm();
 
@@ -31,33 +32,49 @@ const RequestForm = () => {
 			{/* Form Fields */}
 			<div className='w-full flex flex-col gap-4'>
 				<Select
-					{...register('type')}
+					{...register('category')}
 					variant='bordered'
-					label='Soort verlof'
+					label='Categorie'
+					disallowEmptySelection
+					defaultSelectedKeys={['ziekmelding']}
 					size='lg'>
 					<SelectItem key='ziekmelding'>Ziekmelding</SelectItem>
 					<SelectItem key='verlof'>Verlof</SelectItem>
 				</Select>
-				<DateRangePicker
-					hideTimeZone
-					variant='bordered'
-					label='Event duration'
-					visibleMonths={2}
-					onChange={(value) => {
-						value?.start && setValue('startDate', value.start.toString());
-						value?.end && setValue('endDate', value.end.toString());
-					}}
-				/>
-				<Input
-					{...register('reason')}
-					variant='bordered'
-					type='text'
-					size='md'
-					radius='md'
-					label='Reden'
-					isInvalid={!!errors.reason}
-					errorMessage={errors.reason?.message?.toString()}
-				/>
+				{watch('category') === 'verlof' && (
+					<>
+						<Select
+							{...register('type')}
+							variant='bordered'
+							label='Soort verlof'
+							disallowEmptySelection
+							defaultSelectedKeys={['personal']}
+							size='lg'>
+							<SelectItem key='personal'>Persoonlijk</SelectItem>
+							<SelectItem key='holiday'>Vakantie</SelectItem>
+						</Select>
+						<DateRangePicker
+							hideTimeZone
+							variant='bordered'
+							label='Event duration'
+							visibleMonths={2}
+							onChange={(value) => {
+								value?.start && setValue('startDate', value.start.toString());
+								value?.end && setValue('endDate', value.end.toString());
+							}}
+						/>
+						<Input
+							{...register('reason')}
+							variant='bordered'
+							type='text'
+							size='md'
+							radius='md'
+							label='Reden'
+							isInvalid={!!errors.reason}
+							errorMessage={errors.reason?.message?.toString()}
+						/>
+					</>
+				)}
 			</div>
 
 			<div className='flex flex-col gap-2'>
@@ -67,17 +84,8 @@ const RequestForm = () => {
 					color='primary'
 					variant='shadow'
 					className='w-full'>
-					LOGIN
+					INDIENEN
 				</Button>
-
-				<div className='flex gap-1 text-sm justify-center'>
-					<p className='text-center text-zinc-400'>Forgot your password?</p>
-					<Link
-						href='/reset-password'
-						className='text-primary-300 hover:underline'>
-						Click here
-					</Link>
-				</div>
 			</div>
 		</form>
 	);
