@@ -16,9 +16,10 @@ export class Employee extends BaseEntity {
 	@Column({ default: 0 })
 	balance: number;
 
-	@ManyToOne(() => Department, {
+	@ManyToOne(() => Department, 
+	{
 		nullable: false,
 	})
-	@JoinColumn()
+	@JoinColumn({name: "departmentId"})
 	department: Department;
 }

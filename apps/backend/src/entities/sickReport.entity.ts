@@ -1,13 +1,14 @@
-import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
+import { Employee } from "./employee.entity";
 import { User } from "./user.entity";
 
 @Entity("sick_report")
 export class SickReport extends BaseEntity {
-    @OneToMany(
-        () => User,
-        (user) => user.id,
-        { eager: true, cascade: true },
+    @ManyToOne(
+        () => Employee,
+        (employee) => employee.id,
+        { cascade: true },
     )
     @JoinColumn()
     user: User;
