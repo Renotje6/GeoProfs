@@ -1,12 +1,12 @@
 'use client';
 
+import { useMutation } from '@tanstack/react-query';
 import { Button, Input } from '@nextui-org/react';
+import { handleLogin } from '@/actions/auth';
+import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
-import { handleLogin } from '@/actions/auth';
 
 type FormFields = {
 	login: string;
