@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Role } from "./enums/role.enum";
 
 export class LoginInput {
 	@ApiProperty({
@@ -28,11 +29,17 @@ export class AuthResult {
 	userId: string;
 
 	@ApiProperty({
-		example: "user@example.com",
-		description: "The email address of the logged-in user",
+		example: "John.Doe@mail.com",
+		description: "The email of the logged-in user",
 	})
 	email: string;
-}
+
+	@ApiProperty({
+		example: 'manager',
+		description: 'The role of the logged-in user',
+	})
+	role: Role;
+}	
 
 export class UserInfo {
 	@ApiProperty({
