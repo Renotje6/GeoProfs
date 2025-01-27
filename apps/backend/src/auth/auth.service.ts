@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { UsersService } from "src/users/users.service";
+import { User } from "../entities/user.entity";
 
 type AuthInput = { email: string; password: string };
 type SignInData = { email: string; password: string };
@@ -15,12 +16,13 @@ export class AuthService {
 
 	async validateUser(input: AuthInput): Promise<SignInData | null> {
 		const user = await this.usersService.findByEmail(input.email);
+		if (!user) {
+			return null;
+		}
 
-		if (await bcrypt.compare(input.password, user.password)) {
-			return {
-				email: user.email,
-				password: user.password,
-			};
+		const isPasswordValid = await bcrypt.compare(input.password, user.password);
+		if (isPasswordValid) {
+			return { email: user.email, password: user.password };
 		}
 		return null;
 	}
@@ -31,20 +33,29 @@ export class AuthService {
 			throw new UnauthorizedException("User not found");
 		}
 
-		if (!(await bcrypt.compare(user.password, userDb.password))) {
+		const isPasswordValid = await bcrypt.compare(user.password, userDb.password);
+		if (!isPasswordValid) {
 			throw new UnauthorizedException("Invalid password");
 		}
 
 		const accessToken = await this.jwtService.signAsync({
-			userId: userDb.id,
-			email: userDb.email,
+			userId: userDb.id.toString(), // Convert id to string for JWT
 		});
 
 		return {
 			accessToken,
-			email: user.email,
-			userId: userDb.id,
+			email: userDb.email,
+			userId: userDb.id.toString(), // Ensure userId is string in response
 			role: userDb.role,
 		};
+	}
+
+	async validateJwtUser(userId: string): Promise<User> {
+		const user = await this.usersService.findOne(userId);
+		if (!user) {
+			throw new UnauthorizedException("User not found");
+		}
+
+		return user;
 	}
 }
