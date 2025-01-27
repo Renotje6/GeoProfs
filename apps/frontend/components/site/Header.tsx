@@ -35,7 +35,7 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 						href: '/home',
 					},
 					{
-						label: 'Aanvragen',
+						label: 'Verlof Aanvragen',
 						href: '/request',
 					},
 				];
@@ -105,7 +105,7 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 								textValue='Logout'
 								variant='flat'
 								onClick={onLogout}>
-								Notifications
+								No notifications
 							</DropdownItem>
 						</DropdownMenu>
 					</Dropdown>
