@@ -40,7 +40,7 @@ const LoginForm = () => {
 				// store access token in session storage
 				const response = await handleLogin(data.accessToken);
 				// Redirect or update the state
-				if (response) window.location.href = '/home';
+				if (response) window.location.href = data.role === 'manager' ? '/dashboard' : '/home';
 				else {
 					// Set error message
 					setError('root', {
