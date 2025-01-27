@@ -35,8 +35,8 @@ const RequestForm = () => {
 					variant='bordered'
 					label='Soort verlof'
 					size='lg'>
-					<SelectItem key='personal'>Persoonlijk</SelectItem>
-					<SelectItem key='holiday'>Vakantie</SelectItem>
+					<SelectItem key='ziekmelding'>Ziekmelding</SelectItem>
+					<SelectItem key='verlof'>Verlof</SelectItem>
 				</Select>
 				<DateRangePicker
 					hideTimeZone
