@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -6,7 +7,7 @@ import { GetOwnSickReportsDto } from './sick-reports/dto/responses/getOwnSickRep
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
-
+	app.useGlobalPipes(new ValidationPipe({transform: true}));
 	const config = new DocumentBuilder()
 		.setTitle('Geoprofs API')
 		.setDescription('The API for the Geoprofs portal, allowing employees to easily manage their leave and illness. Managers and administrators can use this API to approve leave requests and monitor absenteeism.')
