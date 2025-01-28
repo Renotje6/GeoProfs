@@ -1,22 +1,34 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { EmployeesController } from './employees.controller';
-import { EmployeesService } from './employees.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { EmployeesController } from "./employees.controller";
+import { EmployeesService } from "./employees.service";
 
-describe('EmployeesController', () => {
-  let employeesController: EmployeesController;
-  let employeesService: EmployeesService;
+describe("EmployeesController", () => {
+  let controller: EmployeesController;
+  let employeesService: jest.Mocked<Partial<EmployeesService>>;
 
   beforeEach(async () => {
+    // Mock the EmployeesService methods
+    employeesService = {
+      insert: jest.fn(), // Mock the 'insert' method
+    };
+
+    // Create a test module with the controller and the mocked service
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [EmployeesController],
-      providers: [EmployeesService],
+      controllers: [EmployeesController], // Provide the EmployeesController
+      providers: [
+        {
+          provide: EmployeesService, // Replace EmployeesService with a mock
+          useValue: employeesService,
+        },
+      ],
     }).compile();
 
-    employeesService = module.get<EmployeesService>(EmployeesService);
-    employeesController = module.get<EmployeesController>(EmployeesController);
+    // Get the instance of the controller
+    controller = module.get<EmployeesController>(EmployeesController);
   });
 
-  it('should be defined', () => {
-    expect(employeesController).toBeDefined(); 
+  it("should be defined", () => {
+    // Check if the controller is defined
+    expect(controller).toBeDefined();
   });
 });
