@@ -53,6 +53,10 @@ export class SickReportsController {
 
 		const sickReport = await this.sickReportsService.findOne(id);
 
+		if (!sickReport) {
+			return res.status(HttpStatus.NOT_FOUND).json({ message: 'Sick report not found' });
+		}
+
 		if (sickReport.employee.user.id !== user.id) {
 			return res.status(HttpStatus.FORBIDDEN).json({ message: 'User is not the owner of the sick report' });
 		}
