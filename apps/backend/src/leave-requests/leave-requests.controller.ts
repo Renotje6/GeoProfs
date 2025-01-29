@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Request, Res, Response, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { LeaveRequestStatus } from 'src/entities/leave-request.entity';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { PassportJwtAuthGuard } from '../auth/guards/jwt-auth/passport-jwt.guard';
 import { RolesGuard } from '../auth/guards/roles/roles.guard';
 import { CreateLeaveRequestDto } from './dto/create-leave-request.dto';
+import { CreateLeaveRequestResponseDto } from './dto/responses/createLeaveRequestResponse.dto';
+import { GetAllLeaveRequestsManagerDto } from './dto/responses/getAllLeaveRequestsManager.dto';
+import { GetOwnLeaveRequestsDto } from './dto/responses/getOwnLeaveRequests.dto';
 import { LeaveRequestsService } from './leave-requests.service';
 
 @UseGuards(RolesGuard)
@@ -18,7 +21,7 @@ export class LeaveRequestsController {
 	@Post()
 	@ApiOperation({ summary: 'Create a new leave request' })
 	@ApiBody({ type: CreateLeaveRequestDto })
-	@ApiResponse({ status: 201, description: 'Leave request created' })
+	@ApiResponse({ status: 201, description: 'Leave request created', type: CreateLeaveRequestResponseDto })
 	@ApiResponse({ status: 400, description: 'Invalid start date' })
 	@ApiResponse({ status: 400, description: 'Invalid end date' })
 	async create(@Body() createLeaveRequestDto: CreateLeaveRequestDto, @Request() req, @Response() res) {
@@ -44,7 +47,14 @@ export class LeaveRequestsController {
 	@Roles(Role.manager, Role.employee)
 	@Get()
 	@ApiOperation({ summary: 'Get all leave requests. Managers can see all leave requests, employees can see their own' })
-	@ApiResponse({ status: 200, description: 'All leave requests' })
+	@ApiResponse({ status: 200, description: 'All leave requests', 
+		schema: {
+			anyOf: [
+				{ $ref: getSchemaPath(GetAllLeaveRequestsManagerDto)},
+				{ $ref: getSchemaPath(GetOwnLeaveRequestsDto)}
+			]
+		}
+	})
 	findAll(@Request() req) {
 		const role = req.user.role;
 
@@ -57,12 +67,16 @@ export class LeaveRequestsController {
 
 	@Roles(Role.manager, Role.employee)
 	@Get(':id')
+	@ApiOperation({ summary: 'Get a leave request by ID' })
+	@ApiResponse({ status: 200, description: 'Leave request found' })
 	findOne(@Param('id') id: string) {
 		return this.leaveRequestsService.findOne(id);
 	}
 
 	@Roles(Role.manager)
 	@Patch(':id/:status')
+	@ApiOperation({ summary: 'Update the status of a leave request' })
+	@ApiResponse({ status: 200, description: 'Leave request status updated', type: CreateLeaveRequestResponseDto })
 	async updateStatus(@Param('id') id: string, @Param('status') status: string, @Request() req, @Res() res) {
 		// Check if the leave request exists
 		if (!(await this.leaveRequestsService.findOne(id))) {
@@ -84,6 +98,8 @@ export class LeaveRequestsController {
 
 	@Roles(Role.employee)
 	@Delete(':id')
+	@ApiOperation({ summary: 'Delete a leave request' })
+	@ApiResponse({ status: 200, description: 'Leave request deleted' })
 	async remove(@Param('id') id: string, @Request() req, @Res() res) {
 		try {
 			await this.leaveRequestsService.remove(id, req.user);

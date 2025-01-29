@@ -26,11 +26,8 @@ export class EmployeesService {
 	}
 
 	findOne(id: string): Promise<Employee> {
-		return this.employeesRepository.findOne({
-			where: {
-				id,
-			},
-		});
+		console.log(id)
+		return this.employeesRepository.createQueryBuilder('employee').leftJoinAndSelect('employee.user', 'user').where('employee.userId = :id', { id }).getOne();
 	}
 
 	findByEmail(email: string): Promise<Employee | null> {

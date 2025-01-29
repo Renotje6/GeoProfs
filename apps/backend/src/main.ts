@@ -2,6 +2,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { GetAllLeaveRequestsManagerDto } from './leave-requests/dto/responses/getAllLeaveRequestsManager.dto';
+import { GetOwnLeaveRequestsDto } from './leave-requests/dto/responses/getOwnLeaveRequests.dto';
 import { GetAllSickReportsDepartmentDto } from './sick-reports/dto/responses/getAllSickReportsDepartment.dto';
 import { GetOwnSickReportsDto } from './sick-reports/dto/responses/getOwnSickReports.dto';
 
@@ -15,7 +17,7 @@ async function bootstrap() {
 		.build();
 	const documentFactory = () =>
 		SwaggerModule.createDocument(app, config, {
-			extraModels: [GetAllSickReportsDepartmentDto, GetOwnSickReportsDto],
+			extraModels: [GetAllSickReportsDepartmentDto, GetOwnSickReportsDto, GetOwnLeaveRequestsDto, GetAllLeaveRequestsManagerDto],
 		});
 	SwaggerModule.setup('api', app, documentFactory);
 

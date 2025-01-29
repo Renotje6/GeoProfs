@@ -20,4 +20,12 @@ export class EmployeesController {
 	async getEmployees(@Request() req) {
 		return this.employeesService.findAll(req.user);
 	}
+
+	@Roles(Role.employee)
+	@Get('me')
+	@ApiOperation({ summary: 'Get the current employee' })
+	@ApiResponse({ status: 200, description: 'Employee found', type: GetEmployeeDto })
+	async getMe(@Request() req) {
+		return await this.employeesService.findOne(req.user.id);
+	}
 }
