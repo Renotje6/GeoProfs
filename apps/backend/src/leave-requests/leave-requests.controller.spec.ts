@@ -1,30 +1,36 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { Role } from '../auth/enums/role.enum';
-import { LeaveRequest, LeaveRequestStatus, LeaveRequestType } from '../entities/leave-request.entity';
-import { User } from '../entities/user.entity';
-import { LeaveRequestsController } from './leave-requests.controller';
-import { LeaveRequestsService } from './leave-requests.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { Role } from "../auth/enums/role.enum";
+import {
+	LeaveRequest,
+	LeaveRequestStatus,
+	LeaveRequestType,
+} from "../entities/leave-request.entity";
+import { User } from "../entities/user.entity";
+import { LeaveRequestsController } from "./leave-requests.controller";
+import { LeaveRequestsService } from "./leave-requests.service";
 
-describe('LeaveRequestsController', () => {
+describe("LeaveRequestsController", () => {
 	let controller: LeaveRequestsController;
 	let service: LeaveRequestsService;
 	const mockResponse = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
 	// Mock entities
 	const mockEmployee = {
-		id: 'emp-123',
-		user: { id: 'user-123' } as User,
+		id: "emp-123",
+		user: { id: "user-123" } as User,
 		department: null,
 		balance: 0,
 		sickReports: [],
 	};
 
-	const createMockLeaveRequest = (overrides?: Partial<LeaveRequest>): LeaveRequest =>
+	const createMockLeaveRequest = (
+		overrides?: Partial<LeaveRequest>,
+	): LeaveRequest =>
 		({
-			id: 'lr-123',
+			id: "lr-123",
 			startDate: new Date(Date.now() + 86400000), // Tomorrow
 			endDate: new Date(Date.now() + 172800000), // Day after tomorrow
-			reason: 'Vacation',
+			reason: "Vacation",
 			status: LeaveRequestStatus.pending,
 			employee: mockEmployee,
 			createdAt: new Date(),
@@ -58,12 +64,12 @@ describe('LeaveRequestsController', () => {
 		jest.clearAllMocks();
 	});
 
-	describe('create', () => {
-		it('should return 400 if start date is in past', async () => {
+	describe("create", () => {
+		it("should return 400 if start date is in past", async () => {
 			const dto = {
 				startDate: new Date(Date.now() - 86400000), // Yesterday
 				endDate: new Date(),
-				reason: 'test',
+				reason: "test",
 				type: LeaveRequestType.personal,
 			};
 
@@ -71,20 +77,20 @@ describe('LeaveRequestsController', () => {
 
 			expect(mockResponse.status).toHaveBeenCalledWith(400);
 			expect(mockResponse.json).toHaveBeenCalledWith({
-				message: 'Start date must be in the future',
+				message: "Start date must be in the future",
 			});
 		});
 
-		it('should create leave request when valid', async () => {
+		it("should create leave request when valid", async () => {
 			const dto = {
 				startDate: new Date(Date.now() + 86400000),
 				endDate: new Date(Date.now() + 172800000),
-				reason: 'Family vacation',
+				reason: "Family vacation",
 				type: LeaveRequestType.holiday,
 			};
 			const mockRequest = createMockLeaveRequest(dto);
 
-			jest.spyOn(service, 'create').mockResolvedValue(mockRequest);
+			jest.spyOn(service, "create").mockResolvedValue(mockRequest);
 
 			await controller.create(dto, { user: mockEmployee.user }, mockResponse);
 
@@ -94,12 +100,12 @@ describe('LeaveRequestsController', () => {
 		});
 	});
 
-	describe('findAll', () => {
-		it('should call findAllManager for managers', async () => {
+	describe("findAll", () => {
+		it("should call findAllManager for managers", async () => {
 			const mockManagerUser = { role: Role.manager } as User;
 			const mockResult = [createMockLeaveRequest()];
 
-			jest.spyOn(service, 'findAllManager').mockResolvedValue(mockResult);
+			jest.spyOn(service, "findAllManager").mockResolvedValue(mockResult);
 
 			const result = await controller.findAll({ user: mockManagerUser });
 
@@ -108,10 +114,10 @@ describe('LeaveRequestsController', () => {
 		});
 	});
 
-	describe('findOne', () => {
-		it('should return leave request by id', async () => {
+	describe("findOne", () => {
+		it("should return leave request by id", async () => {
 			const mockRequest = createMockLeaveRequest();
-			jest.spyOn(service, 'findOne').mockResolvedValue(mockRequest);
+			jest.spyOn(service, "findOne").mockResolvedValue(mockRequest);
 
 			const result = await controller.findOne(mockRequest.id);
 
@@ -120,49 +126,70 @@ describe('LeaveRequestsController', () => {
 		});
 	});
 
-	describe('updateStatus', () => {
+	describe("updateStatus", () => {
 		const mockManagerUser = { role: Role.manager } as User;
 		const mockLeaveRequest = createMockLeaveRequest();
 
-		it('should return 404 if request not found', async () => {
-			jest.spyOn(service, 'findOne').mockResolvedValue(null);
+		it("should return 404 if request not found", async () => {
+			jest.spyOn(service, "findOne").mockResolvedValue(null);
 
-			await controller.updateStatus('invalid-id', 'APPROVED', { user: mockManagerUser }, mockResponse);
+			await controller.updateStatus(
+				"invalid-id",
+				"APPROVED",
+				{ user: mockManagerUser },
+				mockResponse,
+			);
 
 			expect(mockResponse.status).toHaveBeenCalledWith(404);
 			expect(mockResponse.json).toHaveBeenCalledWith({
-				message: 'Leave request not found',
+				message: "Leave request not found",
 			});
 		});
 
-		it('should update status when valid', async () => {
+		it("should update status when valid", async () => {
 			const updatedRequest = createMockLeaveRequest({
 				status: LeaveRequestStatus.approved,
 			});
 
-			jest.spyOn(service, 'findOne').mockResolvedValue(mockLeaveRequest);
-			jest.spyOn(service, 'updateStatus').mockResolvedValue(updatedRequest);
+			jest.spyOn(service, "findOne").mockResolvedValue(mockLeaveRequest);
+			jest.spyOn(service, "updateStatus").mockResolvedValue(updatedRequest);
 
-			await controller.updateStatus(mockLeaveRequest.id, LeaveRequestStatus.approved, { user: mockManagerUser }, mockResponse);
+			await controller.updateStatus(
+				mockLeaveRequest.id,
+				LeaveRequestStatus.approved,
+				{ user: mockManagerUser },
+				mockResponse,
+			);
 
-			expect(service.updateStatus).toHaveBeenCalledWith(mockLeaveRequest.id, LeaveRequestStatus.approved, mockManagerUser);
+			expect(service.updateStatus).toHaveBeenCalledWith(
+				mockLeaveRequest.id,
+				LeaveRequestStatus.approved,
+				mockManagerUser,
+			);
 			expect(mockResponse.json).toHaveBeenCalledWith(updatedRequest);
 		});
 	});
 
-	describe('remove', () => {
-		const mockEmployeeUser = { id: 'user-123', role: Role.employee } as User;
+	describe("remove", () => {
+		const mockEmployeeUser = { id: "user-123", role: Role.employee } as User;
 
-		it('should delete when authorized', async () => {
+		it("should delete when authorized", async () => {
 			const mockRequest = createMockLeaveRequest();
-			jest.spyOn(service, 'remove').mockResolvedValue(undefined);
+			jest.spyOn(service, "remove").mockResolvedValue(undefined);
 
-			await controller.remove(mockRequest.id, { user: mockEmployeeUser }, mockResponse);
+			await controller.remove(
+				mockRequest.id,
+				{ user: mockEmployeeUser },
+				mockResponse,
+			);
 
-			expect(service.remove).toHaveBeenCalledWith(mockRequest.id, mockEmployeeUser);
+			expect(service.remove).toHaveBeenCalledWith(
+				mockRequest.id,
+				mockEmployeeUser,
+			);
 			expect(mockResponse.status).toHaveBeenCalledWith(200);
 			expect(mockResponse.json).toHaveBeenCalledWith({
-				message: 'Leave request deleted',
+				message: "Leave request deleted",
 			});
 		});
 	});

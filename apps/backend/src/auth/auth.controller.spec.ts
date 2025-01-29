@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthResult, LoginInput } from './auth.dto';
-import { AuthService } from './auth.service';
-import { Role } from './enums/role.enum';
-import { PassportAuthController } from './passport.auth.controller';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuthResult, LoginInput } from "./auth.dto";
+import { AuthService } from "./auth.service";
+import { Role } from "./enums/role.enum";
+import { PassportAuthController } from "./passport.auth.controller";
 
 // Mock for AuthService to simulate its behavior in tests
 const mockAuthService = {
 	signIn: jest.fn(),
 };
 
-describe('PassportAuthController', () => {
+describe("PassportAuthController", () => {
 	let controller: PassportAuthController;
 	let authService: AuthService;
 
@@ -31,17 +31,17 @@ describe('PassportAuthController', () => {
 	});
 
 	// Tests for the login functionality
-	describe('login', () => {
-		it('should successfully log in and return JWT token and user info', async () => {
+	describe("login", () => {
+		it("should successfully log in and return JWT token and user info", async () => {
 			// Arrange: Creating a mock login input and a mock AuthResult response
 			const loginInput: LoginInput = {
-				login: 'user@example.com',
-				pass: 'password',
+				login: "user@example.com",
+				pass: "password",
 			};
 			const mockAuthResult: AuthResult = {
-				accessToken: 'jwt_token',
-				userId: '12345',
-				email: 'user@example.com',
+				accessToken: "jwt_token",
+				userId: "12345",
+				email: "user@example.com",
 				role: Role.employee,
 			};
 			mockAuthService.signIn.mockResolvedValue(mockAuthResult); // Mocking resolved value for signIn function
@@ -57,16 +57,18 @@ describe('PassportAuthController', () => {
 			});
 		});
 
-		it('should throw unauthorized if invalid credentials are provided', async () => {
+		it("should throw unauthorized if invalid credentials are provided", async () => {
 			// Arrange: Creating mock invalid credentials and making signIn throw an "Unauthorized" error
 			const loginInput: LoginInput = {
-				login: 'user@example.com',
-				pass: 'wrongpassword',
+				login: "user@example.com",
+				pass: "wrongpassword",
 			};
-			mockAuthService.signIn.mockRejectedValue(new Error('Unauthorized')); // Mocking rejected promise for invalid credentials
+			mockAuthService.signIn.mockRejectedValue(new Error("Unauthorized")); // Mocking rejected promise for invalid credentials
 
 			// Act & Assert: Ensure that the function throws an error if invalid credentials are provided
-			await expect(controller.login(loginInput)).rejects.toThrowError('Unauthorized');
+			await expect(controller.login(loginInput)).rejects.toThrowError(
+				"Unauthorized",
+			);
 		});
 	});
 });

@@ -1,12 +1,15 @@
-import { faker } from '@faker-js/faker';
-import { DataSource } from 'typeorm';
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
-import { Employee } from '../../entities/employee.entity';
-import { SickReport } from '../../entities/sickReport.entity';
+import { faker } from "@faker-js/faker";
+import { DataSource } from "typeorm";
+import { Seeder, SeederFactoryManager } from "typeorm-extension";
+import { Employee } from "../../entities/employee.entity";
+import { SickReport } from "../../entities/sickReport.entity";
 
 export default class SickReportSeeder implements Seeder {
 	track?: boolean;
-	async run(dataSource: DataSource, factoryManager: SeederFactoryManager): Promise<any> {
+	async run(
+		dataSource: DataSource,
+		factoryManager: SeederFactoryManager,
+	): Promise<any> {
 		const sickReportRepository = dataSource.getRepository(SickReport);
 		const employeeRepository = dataSource.getRepository(Employee);
 
@@ -20,7 +23,7 @@ export default class SickReportSeeder implements Seeder {
 					endDate: new Date(),
 					createdAt: new Date(),
 					updatedAt: new Date(),
-				})
+				}),
 			);
 		}
 
@@ -33,7 +36,7 @@ export default class SickReportSeeder implements Seeder {
 					employee,
 					startDate: faker.date.past(),
 					endDate: null,
-				})
+				}),
 			);
 		}
 	}

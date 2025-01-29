@@ -1,13 +1,20 @@
-import { faker } from '@faker-js/faker';
-import { DataSource } from 'typeorm';
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
-import { Employee } from '../../entities/employee.entity';
-import { LeaveRequest, LeaveRequestStatus, LeaveRequestType } from '../../entities/leave-request.entity';
+import { faker } from "@faker-js/faker";
+import { DataSource } from "typeorm";
+import { Seeder, SeederFactoryManager } from "typeorm-extension";
+import { Employee } from "../../entities/employee.entity";
+import {
+	LeaveRequest,
+	LeaveRequestStatus,
+	LeaveRequestType,
+} from "../../entities/leave-request.entity";
 
 export class LeaveRequestSeeder implements Seeder {
 	track?: boolean;
 
-	async run(datasource: DataSource, factoryManager: SeederFactoryManager): Promise<any> {
+	async run(
+		datasource: DataSource,
+		factoryManager: SeederFactoryManager,
+	): Promise<any> {
 		// Your implementation here
 		const leaveRequestRepository = datasource.getRepository(LeaveRequest);
 		const employeeRepository = datasource.getRepository(Employee);
@@ -25,10 +32,10 @@ export class LeaveRequestSeeder implements Seeder {
 						endDate: faker.date.future(),
 						createdAt: new Date(),
 						updatedAt: new Date(),
-						reason: faker.helpers.arrayElement(['Vacation', 'Wedding', 'Personal']),
+						reason: faker.helpers.arrayElement(["Vacation", "Wedding", "Personal"]),
 						type: faker.helpers.enumValue(LeaveRequestType),
 						status: faker.helpers.enumValue(LeaveRequestStatus),
-					})
+					}),
 				);
 			}
 		}

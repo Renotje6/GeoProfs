@@ -1,7 +1,7 @@
-import * as bcrypt from 'bcrypt';
-import { BeforeInsert, Column, Entity } from 'typeorm';
-import { Role } from '../auth/enums/role.enum';
-import { BaseEntity } from './base.entity';
+import * as bcrypt from "bcrypt";
+import { BeforeInsert, Column, Entity } from "typeorm";
+import { Role } from "../auth/enums/role.enum";
+import { BaseEntity } from "./base.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -20,7 +20,7 @@ export class User extends BaseEntity {
 	password: string;
 
 	@Column({
-		type: 'enum',
+		type: "enum",
 		enum: Role,
 		default: Role.employee,
 	})
