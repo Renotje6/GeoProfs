@@ -1,64 +1,74 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { EmployeesController } from "./employees.controller";
-import { EmployeesService } from "./employees.service";
+import { Test, TestingModule } from '@nestjs/testing';
+import { Role } from '../auth/enums/role.enum';
+import { EmployeesController } from './employees.controller';
+import { EmployeesService } from './employees.service';
 
-describe("EmployeesController", () => {
-  let controller: EmployeesController;
-  let employeesService: jest.Mocked<Partial<EmployeesService>>;
+describe('EmployeesController', () => {
+	let controller: EmployeesController;
+	let service: EmployeesService;
 
-  beforeEach(async () => {
-    // Mock the EmployeesService methods
-    employeesService = {
-      insert: jest.fn(), // Mock the 'insert' method
-    };
+	const mockEmployee = { id: 'emp-123', name: 'John Doe' };
+	const mockEmployees = [mockEmployee, { id: 'emp-456', name: 'Jane Smith' }];
 
-    // Create a test module with the controller and the mocked service
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [EmployeesController], // Provide the EmployeesController
-      providers: [
-        {
-          provide: EmployeesService, // Replace EmployeesService with a mock
-          useValue: employeesService,
-        },
-      ],
-    }).compile();
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			controllers: [EmployeesController],
+			providers: [
+				{
+					provide: EmployeesService,
+					useValue: {
+						findAll: jest.fn().mockResolvedValue(mockEmployees),
+						findOne: jest.fn().mockResolvedValue(mockEmployee),
+					},
+				},
+			],
+		}).compile();
 
-    // Get the instance of the controller
-    controller = module.get<EmployeesController>(EmployeesController);
-  });
+		controller = module.get<EmployeesController>(EmployeesController);
+		service = module.get<EmployeesService>(EmployeesService);
+	});
 
-  it("should be defined", () => {
-    // Check if the controller is defined
-    expect(controller).toBeDefined();
-  });
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
 
-  describe("createEmployee", () => {
-    it("should call EmployeesService.insert with the correct data", async () => {
-      // Mocked return value for the 'insert' method in EmployeesService
-      const mockEmployee = {
-        id: "5678-5678-5678",
-        email: "john.doe@mail.com",
-        name: "John Doe",
-        departmentId: "1234-1234-1234",
-        balance: 0, // Required field for Employee
-        department: null, // Placeholder for department, as it's nullable
-      };
-      employeesService.insert.mockResolvedValue(mockEmployee); // Simulate resolved value for the service method
+	describe('getEmployees', () => {
+		it('should call service.findAll with authenticated user', async () => {
+			const mockUser = { id: 'mgr-123', role: Role.manager };
+			const req = { user: mockUser };
 
-      // Call the controller's createEmployee method
-      const result = await controller.createEmployee();
+			const result = await controller.getEmployees(req);
 
-      // Assert that EmployeesService.insert is called with the correct parameters
-      expect(employeesService.insert).toHaveBeenCalledWith({
-        email: "john.doe@mail.com",
-        password: "password",
-        avatar: "avatar.png",
-        name: "John Doe",
-        departmentId: "1234-1234-1234",
-      });
+			expect(service.findAll).toHaveBeenCalledWith(mockUser);
+			expect(result).toEqual(mockEmployees);
+		});
 
-      // Assert that the returned result matches the mocked employee
-      expect(result).toEqual(mockEmployee);
-    });
-  });
+		it('should return the result from service.findAll', async () => {
+			const testEmployees = [{ id: 'test-1' }, { id: 'test-2' }];
+			(service.findAll as jest.Mock).mockResolvedValueOnce(testEmployees);
+
+			const result = await controller.getEmployees({ user: {} });
+			expect(result).toEqual(testEmployees);
+		});
+	});
+
+	describe('getMe', () => {
+		it('should call service.findOne with authenticated user ID', async () => {
+			const mockUser = { id: 'emp-123', role: Role.employee };
+			const req = { user: mockUser };
+
+			const result = await controller.getMe(req);
+
+			expect(service.findOne).toHaveBeenCalledWith(mockUser.id);
+			expect(result).toEqual(mockEmployee);
+		});
+
+		it('should return the result from service.findOne', async () => {
+			const testEmployee = { id: 'test-123' };
+			(service.findOne as jest.Mock).mockResolvedValueOnce(testEmployee);
+
+			const result = await controller.getMe({ user: { id: 'test-123' } });
+			expect(result).toEqual(testEmployee);
+		});
+	});
 });

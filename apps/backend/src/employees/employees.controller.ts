@@ -17,7 +17,7 @@ export class EmployeesController {
 	@Get()
 	@ApiOperation({ summary: 'Get all employees' })
 	@ApiResponse({ status: 200, description: 'Employees found', type: [GetEmployeeDto] })
-	async getEmployees(@Request() req) {
+	getEmployees(@Request() req) {
 		return this.employeesService.findAll(req.user);
 	}
 
@@ -25,7 +25,7 @@ export class EmployeesController {
 	@Get('me')
 	@ApiOperation({ summary: 'Get the current employee' })
 	@ApiResponse({ status: 200, description: 'Employee found', type: GetEmployeeDto })
-	async getMe(@Request() req) {
-		return await this.employeesService.findOne(req.user.id);
+	getMe(@Request() req) {
+		return this.employeesService.findOne(req.user.id);
 	}
 }

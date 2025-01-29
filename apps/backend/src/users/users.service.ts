@@ -18,9 +18,7 @@ export class UsersService {
 	}
 
 	findOneIncludingPassword(id: string): Promise<User> {
-		return this.usersRepository.findOne({
-			where: { id },
-		});
+		return this.usersRepository.createQueryBuilder('user').addSelect('user.password').where('user.id = :id', { id }).getOne();
 	}
 
 	findByEmail(email: string): Promise<User> {

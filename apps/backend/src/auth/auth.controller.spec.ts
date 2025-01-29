@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthResult, LoginInput } from './auth.dto';
 import { AuthService } from './auth.service';
+import { Role } from './enums/role.enum';
 import { PassportAuthController } from './passport.auth.controller';
 
 // Mock for AuthService to simulate its behavior in tests
@@ -41,6 +42,7 @@ describe('PassportAuthController', () => {
 				accessToken: 'jwt_token',
 				userId: '12345',
 				email: 'user@example.com',
+				role: Role.employee,
 			};
 			mockAuthService.signIn.mockResolvedValue(mockAuthResult); // Mocking resolved value for signIn function
 

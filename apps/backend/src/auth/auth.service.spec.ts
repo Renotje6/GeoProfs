@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 // Mock de UsersService, die we gaan gebruiken in onze tests
 const mockUsersService = {
 	findByEmail: jest.fn(),
+	findByEmailIncludingPassword: jest.fn(),
 };
 
 const mockJwtService = {

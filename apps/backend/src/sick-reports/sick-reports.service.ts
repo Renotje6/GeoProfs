@@ -35,6 +35,11 @@ export class SickReportsService {
 
 	async findAllManager(user: User) {
 		const manager = await this.managerRepository.createQueryBuilder('manager').leftJoinAndSelect('manager.department', 'department').where('manager.userId = :managerId', { managerId: user.id }).getOne();
+
+		if (!manager?.department) {
+			throw new Error('Manager department not found');
+		}
+
 		const employees = await this.employeeRepository.createQueryBuilder('employee').where('employee.departmentId = :departmentId', { departmentId: manager.department.id }).getMany();
 		// Get all current sick reports for the employees in the employees array
 		return await this.sickReportRepository.find({ where: { employee: In(employees.map((employee) => employee.id)), endDate: IsNull() } });
