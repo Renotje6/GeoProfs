@@ -1,27 +1,22 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryColumn,
-} from "typeorm";
-import { Department } from "./department.entity";
-import { User } from "./user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
+import { BaseEntity } from './base.entity';
+import { Department } from './department.entity';
+import { SickReport } from './sickReport.entity';
+import { User } from './user.entity';
 
 @Entity()
-export class Employee {
-  @PrimaryColumn()
-  @OneToOne(() => User, (user) => user.id, { eager: true, cascade: true })
-  @JoinColumn({ name: "id" })
-  id: string;
+export class Employee extends BaseEntity {
+	@OneToOne(() => User, { cascade: true, eager: true })
+	@JoinColumn()
+	user: User;
 
-  @Column({ default: 0 })
-  balance: number;
+	@Column({ default: 0 })
+	balance: number;
 
-  @ManyToOne(() => Department, {
-    nullable: false,
-  })
-  @JoinColumn({ name: "departmentId" })
-  department: Department;
+	@ManyToOne(() => Department, { eager: true })
+	@JoinColumn({ name: 'departmentId' })
+	department: Department;
+
+	@OneToMany(() => SickReport, (sickReport) => sickReport.employee)
+	sickReports: SickReport[];
 }

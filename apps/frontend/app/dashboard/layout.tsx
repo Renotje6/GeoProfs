@@ -11,6 +11,7 @@ export default function RootLayout({
 			<Header
 				title='DASHBOARD'
 				hideNotifications={false}
+				type='admin'
 			/>
 			<main className='min-h-screen flex items-center justify-center'>{children}</main>
 			<Footer />

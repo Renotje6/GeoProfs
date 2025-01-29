@@ -9,26 +9,40 @@ import Link from 'next/link';
 
 interface HeaderProps {
 	title: string;
+	type?: 'user' | 'admin';
 	endContent?: React.ReactNode;
+	hideLinks?: boolean;
 	hideAvatar?: boolean;
 	hideNotifications?: boolean;
 }
 
-const Header = ({ title, endContent, hideAvatar = false, hideNotifications = true }: HeaderProps) => {
-	const routes = [
-		{
-			label: 'Dashboard',
-			href: '/dashboard',
-		},
-		{
-			label: 'Aanvragen',
-			href: '/requests',
-		},
-		{
-			label: 'Gebruikers',
-			href: '/users',
-		},
-	];
+const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLinks = false, hideNotifications = true }: HeaderProps) => {
+	const routes =
+		type === 'admin'
+			? [
+					{
+						label: 'Dashboard',
+						href: '/dashboard',
+					},
+					{
+						label: 'Aanvragen',
+						href: '/requests',
+					},
+					{
+						label: 'Gebruikers',
+						href: '/users',
+					},
+				]
+			: [
+					{
+						label: 'Home',
+						href: '/home',
+					},
+					{
+						label: 'Aanvragen',
+						href: '/requests',
+					},
+				];
 
 	return (
 		<header className='w-full bg-black/5 rounded-lg min-h-20 flex gap-2 items-center p-2 justify-between px-4 shadow-xl shadow-black/5'>
@@ -42,22 +56,24 @@ const Header = ({ title, endContent, hideAvatar = false, hideNotifications = tru
 					/>
 				</div>
 				<p className='text-4xl font-semibold'>{title}</p>
-				<div className='pl-5'>
-					<ul className='flex text-lg'>
-						{routes.map((route, index) => (
-							<li key={route.label}>
-								<Link
-									className='uppercase font-medium hover:underline decoration-4 underline-offset-4'
-									href={route.href}>
-									{route.label}
-								</Link>
-								{index < routes.length - 1 && (
-									<span className='mx-2'>●</span> // Dot separator
-								)}
-							</li>
-						))}
-					</ul>
-				</div>
+				{!hideLinks && (
+					<div className='pl-5'>
+						<ul className='flex text-lg'>
+							{routes.map((route, index) => (
+								<li key={route.label}>
+									<Link
+										className='uppercase font-medium hover:underline decoration-4 underline-offset-4'
+										href={route.href}>
+										{route.label}
+									</Link>
+									{index < routes.length - 1 && (
+										<span className='mx-2'>●</span> // Dot separator
+									)}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
 			</div>
 
 			{/* End Content */}
