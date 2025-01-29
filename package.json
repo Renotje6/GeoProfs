@@ -1,4 +1,7 @@
 {
+  "dependencies": {
+    "@nestjs/mapped-types": "*"
+  },
 	"name": "my-turborepo",
 	"private": true,
 	"scripts": {
