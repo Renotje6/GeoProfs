@@ -3,6 +3,7 @@ import { getEmployeeRequests } from '@/actions/users';
 import { useQuery } from '@tanstack/react-query';
 import { MdManageAccounts } from 'react-icons/md';
 import React from 'react';
+import Link from 'next/link';
 
 const columns = [
 	{ name: 'NAAM', uid: 'employee.user.name', sortable: true },
@@ -146,7 +147,12 @@ const HomeTable = () => {
 						onValueChange={onSearchChange}
 					/>
 					<div className='flex gap-3'>
-						<Button color='primary'>Add New</Button>
+						<Button
+							color='primary'
+							as={Link}
+							href='/request'>
+							Add New
+						</Button>
 					</div>
 				</div>
 			</div>
