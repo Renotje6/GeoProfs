@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Department } from '../entities/department.entity';
 import { Employee } from '../entities/employee.entity';
 import { LeaveRequest, LeaveRequestStatus } from '../entities/leave-request.entity';
@@ -48,21 +48,41 @@ export class LeaveRequestsService {
 	}
 
 	async findAllManager(user: User) {
-		const manager = await this.managerRepository.createQueryBuilder('manager').leftJoinAndSelect('manager.department', 'department').where('manager.userId = :managerId', { managerId: user.id }).getOne();
-		const employees = await this.employeeRepository.createQueryBuilder('employee').where('employee.departmentId = :departmentId', { departmentId: manager.department.id }).getMany();
-
-		return await this.leaveRequestRepository.find({ where: { employee: In(employees.map((employee) => employee.id)) } });
+		const manager = await this.managerRepository.createQueryBuilder('manager')
+			.leftJoinAndSelect('manager.department', 'department')
+			.where('manager.userId = :managerId', { managerId: user.id })
+			.getOne();
+	
+		const employees = await this.employeeRepository.createQueryBuilder('employee')
+			.where('employee.departmentId = :departmentId', { departmentId: manager.department.id })
+			.getMany();
+	
+		return this.leaveRequestRepository.createQueryBuilder('leaveRequest')
+			.leftJoinAndSelect('leaveRequest.employee', 'employee')
+			.leftJoinAndSelect('employee.user', 'user')
+			.where('leaveRequest.requested_by IN (:...employeeIds)', { 
+				employeeIds: employees.map(employee => employee.id) 
+			})
+			.getMany();
 	}
+	
 
 	async findMine(user: User) {
-		const employee = await this.employeeRepository.createQueryBuilder().where('employee.userId = :employeeId', { employeeId: user.id }).getOne();
-
+		const employee = await this.employeeRepository.createQueryBuilder('employee')
+			.where('employee.userId = :employeeId', { employeeId: user.id })
+			.getOne();
+	
 		if (!employee) {
 			throw new Error('Employee not found');
 		}
-
-		return this.leaveRequestRepository.createQueryBuilder('leaveRequest').where('leaveRequest.requested_by = :employeeId', { employeeId: employee.id }).getMany();
+	
+		return this.leaveRequestRepository.createQueryBuilder('leaveRequest')
+			.leftJoinAndSelect('leaveRequest.employee', 'employee')
+			.leftJoinAndSelect('employee.user', 'user')
+			.where('leaveRequest.requested_by = :employeeId', { employeeId: employee.id })
+			.getMany();
 	}
+	
 
 	findOne(id: string) {
 		return this.leaveRequestRepository.findOne({ where: { id } });
