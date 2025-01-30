@@ -62,6 +62,7 @@ export class PassportAuthController {
 	})
 	// Retrieves the information of the logged-in user from the request object.
 	GetUserInfo(@Request() request): UserInfo {
-		return request.user;
+		const {password, ...user} = request.user;
+		return user;
 	}
 }
