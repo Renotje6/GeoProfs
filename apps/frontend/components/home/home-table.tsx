@@ -1,24 +1,30 @@
-import { getEmployeeRequests } from '@/actions/users';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Button, Pagination, type SortDescriptor, Spinner, Chip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react';
+import { getEmployeeRequests } from '@/actions/users';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
 import { MdManageAccounts } from 'react-icons/md';
+import React from 'react';
 
 const columns = [
-	{ name: 'NAAM', uid: 'name', sortable: true },
-	{ name: 'STATUS', uid: 'status', sortable: true },
+	{ name: 'NAAM', uid: 'employee.user.name', sortable: true },
+	{ name: 'REDEN', uid: 'reason', sortable: true },
 	{ name: 'START ', uid: 'startDate', sortable: true },
 	{ name: 'EIND', uid: 'endDate', sortable: true },
-	{ name: 'REDEN', uid: 'reason', sortable: false },
+	{ name: 'STATUS', uid: 'status', sortable: true },
 	{ name: 'ACTIES', uid: 'actions', sortable: false },
 ];
+
+// Utility function to resolve nested keys
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+const getNestedValue = (obj: any, path: string) => {
+	return path.split('.').reduce((acc, part) => acc?.[part], obj);
+};
 
 const HomeTable = () => {
 	const [page, setPage] = React.useState(1);
 	const [filterValue, setFilterValue] = React.useState('');
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 	const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-		column: 'name',
+		column: 'employee.user.name',
 		direction: 'ascending',
 	});
 
@@ -34,9 +40,10 @@ const HomeTable = () => {
 		let filteredUsers = [...(data || [])];
 
 		if (hasSearchFilter) {
-			filteredUsers = filteredUsers.filter(
-				(user) => (user.name || '').toLowerCase().includes(filterValue.toLowerCase()) // Fallback to empty string
-			);
+			filteredUsers = filteredUsers.filter((user) => {
+				const name = getNestedValue(user, 'employee.user.name') || '';
+				return name.toLowerCase().includes(filterValue.toLowerCase());
+			});
 		}
 
 		return filteredUsers;
@@ -53,8 +60,8 @@ const HomeTable = () => {
 
 	const sortedItems = React.useMemo(() => {
 		return [...items].sort((a, b) => {
-			const first = a[sortDescriptor.column as keyof typeof a] as number;
-			const second = b[sortDescriptor.column as keyof typeof b] as number;
+			const first = getNestedValue(a, sortDescriptor.column as string) as number;
+			const second = getNestedValue(b, sortDescriptor.column as string) as number;
 			const cmp = first < second ? -1 : first > second ? 1 : 0;
 
 			return sortDescriptor.direction === 'descending' ? -cmp : cmp;
@@ -62,11 +69,10 @@ const HomeTable = () => {
 	}, [sortDescriptor, items]);
 
 	const renderCell = React.useCallback((user: (typeof data)[0], columnKey: React.Key) => {
-		const cellValue = user[columnKey as keyof typeof user];
+		const cellValue = getNestedValue(user, columnKey as string);
 
 		switch (columnKey) {
 			case 'startDate':
-				return <div suppressHydrationWarning>{new Date(cellValue).toLocaleString()}</div>;
 			case 'endDate':
 				return <div suppressHydrationWarning>{new Date(cellValue).toLocaleString()}</div>;
 			case 'status':
@@ -89,13 +95,12 @@ const HomeTable = () => {
 						Rejected
 					</Chip>
 				);
-
 			case 'actions':
 				return (
 					<Dropdown>
 						<DropdownTrigger>
 							<Button
-								startContent={<MdManageAccounts />}
+								startContent={<MdManageAccounts className='size-5' />}
 								variant='light'
 							/>
 						</DropdownTrigger>
