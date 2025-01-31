@@ -41,7 +41,7 @@ const HomeStats = () => {
 				{/* Accepted */}
 				<div className='flex gap-4 bg-black/5 rounded-lg p-2 items-center w-full px-14 text-xl justify-center'>
 					<h2 className='font-medium'>BALANS</h2>
-					<p className='text-zinc-500'>{employeeData.balance}</p>
+					<p className='text-zinc-500'>{employeeData?.balance ?? 0}</p>
 				</div>
 			</div>
 		</div>
