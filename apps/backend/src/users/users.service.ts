@@ -1,23 +1,41 @@
-import { Injectable } from '@nestjs/common';
-
-export type User = any;
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "../entities/user.entity";
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: '1',
-      password: '1',
-    },
-    {
-      userId: 2,
-      username: '2',
-      password: '2',
-    },
-  ];
+	constructor(
+		@InjectRepository(User) private usersRepository: Repository<User>,
+	) {}
 
-  async findUserByName(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
-  }
+	findAll(): Promise<User[]> {
+		return this.usersRepository.find();
+	}
+
+	findOne(id: string): Promise<User> {
+		return this.usersRepository.findOne({
+			where: { id },
+		});
+	}
+
+	findOneIncludingPassword(id: string): Promise<User> {
+		return this.usersRepository
+			.createQueryBuilder("user")
+			.addSelect("user.password")
+			.where("user.id = :id", { id })
+			.getOne();
+	}
+
+	findByEmail(email: string): Promise<User> {
+		return this.usersRepository.findOne({ where: { email } });
+	}
+
+	findByEmailIncludingPassword(email: string): Promise<User> {
+		return this.usersRepository
+			.createQueryBuilder("user")
+			.addSelect("user.password")
+			.where("user.email = :email", { email })
+			.getOne();
+	}
 }
