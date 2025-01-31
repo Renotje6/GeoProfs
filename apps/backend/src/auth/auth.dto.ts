@@ -35,11 +35,11 @@ export class AuthResult {
 	email: string;
 
 	@ApiProperty({
-		example: 'manager',
-		description: 'The role of the logged-in user',
+		example: "manager",
+		description: "The role of the logged-in user",
 	})
 	role: Role;
-}	
+}
 
 export class UserInfo {
 	@ApiProperty({

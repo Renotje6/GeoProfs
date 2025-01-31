@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
-import { User } from '../entities/user.entity';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { User } from "../entities/user.entity";
+import { UsersService } from "../users/users.service";
 
 type AuthInput = { email: string; password: string };
 type SignInData = { email: string; password: string };
@@ -11,11 +11,13 @@ type SignInData = { email: string; password: string };
 export class AuthService {
 	constructor(
 		private usersService: UsersService,
-		private jwtService: JwtService
+		private jwtService: JwtService,
 	) {}
 
 	async validateUser(input: AuthInput): Promise<SignInData | null> {
-		const user = await this.usersService.findByEmailIncludingPassword(input.email);
+		const user = await this.usersService.findByEmailIncludingPassword(
+			input.email,
+		);
 		if (!user) {
 			return null;
 		}
@@ -28,14 +30,16 @@ export class AuthService {
 	}
 
 	async signIn(user: SignInData) {
-		const userDb = await this.usersService.findByEmailIncludingPassword(user.email);
+		const userDb = await this.usersService.findByEmailIncludingPassword(
+			user.email,
+		);
 		if (!userDb) {
-			throw new UnauthorizedException('User not found');
+			throw new UnauthorizedException("User not found");
 		}
 
 		const isPasswordValid = await bcrypt.compare(user.password, userDb.password);
 		if (!isPasswordValid) {
-			throw new UnauthorizedException('Invalid password');
+			throw new UnauthorizedException("Invalid password");
 		}
 
 		const accessToken = await this.jwtService.signAsync({
@@ -53,7 +57,7 @@ export class AuthService {
 	async validateJwtUser(userId: string): Promise<User> {
 		const user = await this.usersService.findOne(userId);
 		if (!user) {
-			throw new UnauthorizedException('User not found');
+			throw new UnauthorizedException("User not found");
 		}
 
 		return user;

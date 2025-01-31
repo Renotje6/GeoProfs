@@ -21,7 +21,11 @@ export class LeaveRequestsController {
 	@Post()
 	@ApiOperation({ summary: 'Create a new leave request' })
 	@ApiBody({ type: CreateLeaveRequestDto })
-	@ApiResponse({ status: 201, description: 'Leave request created', type: CreateLeaveRequestResponseDto })
+	@ApiResponse({
+		status: 201,
+		description: 'Leave request created',
+		type: CreateLeaveRequestResponseDto,
+	})
 	@ApiResponse({ status: 400, description: 'Invalid start date' })
 	@ApiResponse({ status: 400, description: 'Invalid end date' })
 	async create(@Body() createLeaveRequestDto: CreateLeaveRequestDto, @Request() req, @Response() res) {
@@ -46,10 +50,12 @@ export class LeaveRequestsController {
 
 	@Roles(Role.manager, Role.employee)
 	@Get()
-	@ApiOperation({ summary: 'Get all leave requests. Managers can see all leave requests, employees can see their own' })
+	@ApiOperation({
+		summary: 'Get all leave requests. Managers can see all leave requests, employees can see their own',
+	})
 	@ApiResponse({
 		status: 200,
-		description: 'All leave requests. It will return an array.',
+		description: 'All leave requests',
 		schema: {
 			anyOf: [{ $ref: getSchemaPath(GetAllLeaveRequestsManagerDto) }, { $ref: getSchemaPath(GetOwnLeaveRequestsDto) }],
 		},
@@ -75,7 +81,11 @@ export class LeaveRequestsController {
 	@Roles(Role.manager)
 	@Patch(':id/:status')
 	@ApiOperation({ summary: 'Update the status of a leave request' })
-	@ApiResponse({ status: 200, description: 'Leave request status updated', type: CreateLeaveRequestResponseDto })
+	@ApiResponse({
+		status: 200,
+		description: 'Leave request status updated',
+		type: CreateLeaveRequestResponseDto,
+	})
 	async updateStatus(@Param('id') id: string, @Param('status') status: string, @Request() req, @Res() res) {
 		// Check if the leave request exists
 		if (!(await this.leaveRequestsService.findOne(id))) {
