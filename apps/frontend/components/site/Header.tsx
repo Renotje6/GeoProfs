@@ -25,10 +25,6 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 						href: '/dashboard',
 					},
 					{
-						label: 'Aanvragen',
-						href: '/requests',
-					},
-					{
 						label: 'Gebruikers',
 						href: '/users',
 					},
@@ -39,10 +35,17 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 						href: '/home',
 					},
 					{
-						label: 'Aanvragen',
-						href: '/requests',
+						label: 'Verlof Aanvragen',
+						href: '/request',
 					},
 				];
+
+	const onLogout = async () => {
+		// delete the token from session storage
+		sessionStorage.removeItem('token');
+		// Redirect to login page
+		window.location.href = '/login';
+	};
 
 	return (
 		<header className='w-full bg-black/5 rounded-lg min-h-20 flex gap-2 items-center p-2 justify-between px-4 shadow-xl shadow-black/5'>
@@ -101,10 +104,8 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 								key={1}
 								textValue='Logout'
 								variant='flat'
-								onClick={() => {
-									// signOut();
-								}}>
-								Notifications
+								onClick={onLogout}>
+								No notifications
 							</DropdownItem>
 						</DropdownMenu>
 					</Dropdown>
@@ -130,9 +131,7 @@ const Header = ({ title, type = 'user', endContent, hideAvatar = false, hideLink
 										textValue='Logout'
 										variant='flat'
 										startContent={<BiLogOut />}
-										onClick={() => {
-											// signOut();
-										}}
+										onClick={onLogout}
 										className='text-danger'
 										color='danger'>
 										Logout
