@@ -47,13 +47,12 @@ export class LeaveRequestsController {
 	@Roles(Role.manager, Role.employee)
 	@Get()
 	@ApiOperation({ summary: 'Get all leave requests. Managers can see all leave requests, employees can see their own' })
-	@ApiResponse({ status: 200, description: 'All leave requests. It will return an array.', 
+	@ApiResponse({
+		status: 200,
+		description: 'All leave requests. It will return an array.',
 		schema: {
-			anyOf: [
-				{ $ref: getSchemaPath(GetAllLeaveRequestsManagerDto)},
-				{ $ref: getSchemaPath(GetOwnLeaveRequestsDto)}
-			]
-		}
+			anyOf: [{ $ref: getSchemaPath(GetAllLeaveRequestsManagerDto) }, { $ref: getSchemaPath(GetOwnLeaveRequestsDto) }],
+		},
 	})
 	findAll(@Request() req) {
 		const role = req.user.role;

@@ -24,17 +24,21 @@ export async function createRequest({ type, request }: CreateRequest) {
 			});
 
 			if (!response.ok) {
-				return { success: false, message: 'Failed to create sick report' };
+				const body = await response.json();
+				return { success: false, message: body.message ?? 'Er is een fout opgetreden tijdens het ziekmelden' };
 			}
 
 			return { success: true, message: 'Sick report created' };
 		}
+
+		console.log({ request, type });
 
 		// Create a leave request
 		const response = await fetch('http://localhost:8080/leave-requests', {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${cookies().get('token')?.value}`,
+				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
 				startDate: request?.startDate,
@@ -45,6 +49,8 @@ export async function createRequest({ type, request }: CreateRequest) {
 		});
 
 		if (!response.ok) {
+			const body = await response.json();
+			console.error('Failed to create leave request:', body);
 			return { success: false, message: 'Failed to create leave request' };
 		}
 

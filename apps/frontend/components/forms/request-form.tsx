@@ -2,7 +2,6 @@
 
 import { Button, DateRangePicker, Input, Select, SelectItem } from '@nextui-org/react';
 import { createRequest } from '@/actions/requests';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import React from 'react';
 
@@ -15,7 +14,6 @@ type FormFields = {
 };
 
 const RequestForm = () => {
-	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
@@ -26,15 +24,31 @@ const RequestForm = () => {
 	} = useForm<FormFields>();
 
 	const onSubmit = async (data: FormFields) => {
+		if (data.category === 'verlof' && !data.startDate) {
+			return setError('root', { message: 'Start date is required' });
+		}
+
+		if (data.category === 'verlof' && !data.endDate) {
+			return setError('root', { message: 'End date is required' });
+		}
+
+		if (data.category === 'verlof' && !data.reason) {
+			return setError('root', { message: 'Reason is required' });
+		}
+
 		const response = await createRequest({
 			type: data.category === 'verlof' ? 'leave' : 'sick',
-			request: {
-				startDate: data.startDate,
-				endDate: data.endDate,
-				reason: data.reason,
-				type: data.type,
-			},
+			...(data.category === 'verlof' && {
+				request: {
+					startDate: new Date(data.startDate).toISOString(),
+					endDate: new Date(data.endDate).toISOString(),
+					reason: data.reason,
+					type: data.type,
+				},
+			}),
 		});
+
+		console.log('Response:', response);
 
 		if (!response.success) {
 			return setError('root', { message: response.message });
@@ -43,7 +57,7 @@ const RequestForm = () => {
 		console.log('Request created:', response);
 
 		// redirect
-		router.push('/home');
+		window.location.href = '/home';
 	};
 
 	return (
@@ -69,7 +83,10 @@ const RequestForm = () => {
 				{watch('category') === 'verlof' && (
 					<>
 						<Select
-							{...register('type')}
+							{...register('type', {
+								disabled: watch('category') === 'ziekmelding',
+								required: 'Soort verlof is verplicht',
+							})}
 							variant='bordered'
 							label='Soort verlof'
 							disallowEmptySelection
@@ -89,7 +106,10 @@ const RequestForm = () => {
 							}}
 						/>
 						<Input
-							{...register('reason')}
+							{...register('reason', {
+								disabled: watch('category') === 'ziekmelding',
+								required: 'Reden is verplicht',
+							})}
 							variant='bordered'
 							type='text'
 							size='md'
@@ -102,6 +122,10 @@ const RequestForm = () => {
 				)}
 			</div>
 
+			{/* errors */}
+			{errors.root && <p className='text-red-500 text-center'>{errors.root.message}</p>}
+
+			{/* Submit Button */}
 			<div className='flex flex-col gap-2'>
 				<Button
 					size='lg'

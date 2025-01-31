@@ -48,41 +48,34 @@ export class LeaveRequestsService {
 	}
 
 	async findAllManager(user: User) {
-		const manager = await this.managerRepository.createQueryBuilder('manager')
-			.leftJoinAndSelect('manager.department', 'department')
-			.where('manager.userId = :managerId', { managerId: user.id })
-			.getOne();
-	
-		const employees = await this.employeeRepository.createQueryBuilder('employee')
-			.where('employee.departmentId = :departmentId', { departmentId: manager.department.id })
-			.getMany();
-	
-		return this.leaveRequestRepository.createQueryBuilder('leaveRequest')
+		const manager = await this.managerRepository.createQueryBuilder('manager').leftJoinAndSelect('manager.department', 'department').where('manager.userId = :managerId', { managerId: user.id }).getOne();
+
+		const employees = await this.employeeRepository.createQueryBuilder('employee').where('employee.departmentId = :departmentId', { departmentId: manager.department.id }).getMany();
+
+		return this.leaveRequestRepository
+			.createQueryBuilder('leaveRequest')
 			.leftJoinAndSelect('leaveRequest.employee', 'employee')
 			.leftJoinAndSelect('employee.user', 'user')
-			.where('leaveRequest.requested_by IN (:...employeeIds)', { 
-				employeeIds: employees.map(employee => employee.id) 
+			.where('leaveRequest.requested_by IN (:...employeeIds)', {
+				employeeIds: employees.map((employee) => employee.id),
 			})
 			.getMany();
 	}
-	
 
 	async findMine(user: User) {
-		const employee = await this.employeeRepository.createQueryBuilder('employee')
-			.where('employee.userId = :employeeId', { employeeId: user.id })
-			.getOne();
-	
+		const employee = await this.employeeRepository.createQueryBuilder('employee').where('employee.userId = :employeeId', { employeeId: user.id }).getOne();
+
 		if (!employee) {
 			throw new Error('Employee not found');
 		}
-	
-		return this.leaveRequestRepository.createQueryBuilder('leaveRequest')
+
+		return this.leaveRequestRepository
+			.createQueryBuilder('leaveRequest')
 			.leftJoinAndSelect('leaveRequest.employee', 'employee')
 			.leftJoinAndSelect('employee.user', 'user')
 			.where('leaveRequest.requested_by = :employeeId', { employeeId: employee.id })
 			.getMany();
 	}
-	
 
 	findOne(id: string) {
 		return this.leaveRequestRepository.findOne({ where: { id } });
@@ -103,17 +96,17 @@ export class LeaveRequestsService {
 
 	async remove(id: string, user: User) {
 		// Check if the user is the owner of the leave request
-    const employee = await this.employeeRepository.createQueryBuilder().where('employee.userId = :employeeId', { employeeId: user.id }).getOne();
+		const employee = await this.employeeRepository.createQueryBuilder().where('employee.userId = :employeeId', { employeeId: user.id }).getOne();
 		const leaveRequest = await this.findOne(id);
 
 		if (leaveRequest.employee.user.id !== user.id) {
 			throw new Error('User is not the owner of the leave request');
 		}
 
-    // Update the employee's balance
-    const totalDays = Math.abs(leaveRequest.endDate.getDate() - leaveRequest.startDate.getDate()) || 1;
-    employee.balance += totalDays;
-    await this.employeeRepository.save(employee);
+		// Update the employee's balance
+		const totalDays = Math.abs(leaveRequest.endDate.getDate() - leaveRequest.startDate.getDate()) || 1;
+		employee.balance += totalDays;
+		await this.employeeRepository.save(employee);
 
 		return this.leaveRequestRepository.delete(id);
 	}
